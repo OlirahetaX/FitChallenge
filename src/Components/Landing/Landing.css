@@ -1,0 +1,8 @@
+a {
+  font-weight: bold;
+}
+
+.text-gray-900:hover {
+  text-decoration: underline;
+  font-weight: bold;
+}
