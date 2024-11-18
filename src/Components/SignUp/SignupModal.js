@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import "./SignupModal.css"; // Asegúrate de que tienes el archivo de estilos
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../Firebase/firebaseConfig";
-import axios from "axios";
 
 const SignupModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({

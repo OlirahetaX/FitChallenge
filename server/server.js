@@ -99,7 +99,8 @@ app.post("/logIn", async (req, res) => {
     });
   }
 });
--app.post("/logOut", async (req, res) => {
+
+app.post("/logOut", async (req, res) => {
   const auth = getAuth(firebaseApp);
   try {
     await signOut(auth);

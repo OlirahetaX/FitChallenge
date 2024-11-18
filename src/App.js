@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { auth } from "./Components/Firebase/firebaseConfig"
 import Landing from "./Components/Landing/Landing";
+import Home from "./Components/Home/Home";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route index element={<Landing />} />
             <Route path="*" element={<Navigate replace to={"/"} />} />
           </Route>
+          <Route path="Home" element={<Home/>} />
           {/* <Route path="SignUp" element={<Signup />} /> */}
         </Routes>
       </BrowserRouter>
