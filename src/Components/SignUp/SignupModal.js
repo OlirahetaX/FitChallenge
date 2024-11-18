@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SignupModal.css"; // Asegúrate de que tienes el archivo de estilos
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Firebase/firebaseConfig";
+import axios from "axios";
 
 const SignupModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -58,18 +59,32 @@ const SignupModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!passwordError && !confirmPasswordError) {
       try {
-        await createUserWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
-        const user = auth.currentUser;
-        console.log(user);
-        limpiarForm();
-        // navigate("/UserHome");
+        const response = await fetch("http://localhost:3001/createUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            correo: formData.email,
+            contrasena: formData.password,
+          }).toString(),
+        });
+
+        // Verificar si la respuesta es exitosa
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // Aquí puedes hacer algo con la respuesta si es necesario
+          alert("Usuario Creado con exito")
+          limpiarForm();
+          // Aquí podrías redirigir al usuario o mostrar un mensaje de éxito
+        } else {
+          const errorData = await response.json();
+          console.error(errorData.descripcion);
+          alert(errorData.descripcion); // Muestra el error del backend
+        }
       } catch (error) {
-        console.log(error.message);
-        alert(error.message);
+        console.error("Error al crear el usuario:", error);
+        alert("Hubo un error al crear el usuario");
       }
     } else {
       alert("Por favor, corrige los errores antes de enviar.");
@@ -82,8 +97,8 @@ const SignupModal = ({ isOpen, onClose }) => {
       password: "",
       confirmPassword: "",
     });
-    setPasswordError("")
-    setConfirmPasswordError("")
+    setPasswordError("");
+    setConfirmPasswordError("");
   };
   const cerrarModal = () => {
     limpiarForm();
