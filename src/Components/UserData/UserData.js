@@ -39,7 +39,7 @@ const UserData = () => {
           <div>
             <h1 className="titulo">¿Cual es tu objetivo principal?</h1>
             <Card1
-              title="Título de la tarjeta"
+              title="Estamos trabajando en esta Ventana🦾🤙 regresar a la ventana principal (Pero ya puedes hacer login con tu cuenta👀)"
               description="Esta es una descripción breve para la tarjeta. Puedes poner cualquier texto aquí."
             />
           </div>

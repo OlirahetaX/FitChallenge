@@ -70,7 +70,7 @@ const Landing = () => {
           </div>
           <LoginModal isOpen={isLoginOpen} onClose={closeLoginModal}></LoginModal>
           <SignupModal isOpen={isSignupOpen} onClose={closeSignupModal} />
-          <Footer />
+          <Footer setSeccion={setSeccion}/>
         </div>
       </div>
     </div>

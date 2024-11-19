@@ -1,7 +1,7 @@
 import React from 'react';
 import './Footer.css'; 
 
-function Footer() {
+function Footer({setSeccion}) {
   return (
     <footer className="footer-container">
       <div className="footer-content">
@@ -15,16 +15,18 @@ function Footer() {
         <div className="footer-center">
           <h4>Productos</h4>
           <ul>
-            <li>Rutinas</li>
-            <li>Ejercicios</li>
+            <li style={{cursor: "pointer"}}>Rutinas</li>
+            <li style={{cursor: "pointer"}}>Ejercicios</li>
           </ul>
         </div>
         <div className="footer-right">
           <h4>Compañía</h4>
           <ul>
-            <li>Quiénes somos</li>
-            <li>Equipo</li>
-            <li>Contáctanos</li>
+            <li style={{cursor: "pointer"}}>Quiénes somos</li>
+            <li style={{cursor: "pointer"}}>Equipo</li>
+            <li style={{cursor: "pointer"}} onClick={() => {
+              setSeccion("Contacto");
+            }}>Contáctanos</li>
           </ul>
         </div>
       </div>

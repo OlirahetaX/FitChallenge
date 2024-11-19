@@ -21,8 +21,8 @@ function Navbar({setIsLoginOpen, setIsSignupOpen, setSeccion}) {
           <div class="flex lg:flex-1" onClick={() => {
               setSeccion("Principal");
             }}>
-            <a>Fit</a>
-            <p>Challenge</p>
+            <a style={{cursor: "pointer"}}>Fit</a>
+            <p style={{cursor: "pointer"}}>Challenge</p>
           </div>
 
           <div class="hidden lg:flex lg:gap-x-12">

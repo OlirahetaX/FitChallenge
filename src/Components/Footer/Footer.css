@@ -38,6 +38,11 @@
   ul li {
     margin: 5px 0;
     font-weight: thin;
+
+  }
+
+  ul li:hover {
+    text-decoration: underline;   
   }
   
   .footer-bottom {
