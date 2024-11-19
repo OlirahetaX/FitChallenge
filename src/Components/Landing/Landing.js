@@ -1,69 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Landing.css";
 import LoginModal from "../Login/LoginModal";
 import SignupModal from "../SignUp/SignupModal";
 import backgroundPic from "../../assets/background-pic.png";
+import Footer from "../Footer/Footer"
+import Contacto from "../Contacto/Contacto";
+import Navbar from "../Navbar/Navbar";
 
 function Landing() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
 
-  const openLoginModal = () => {
-    setIsLoginOpen(true);
-  };
   const closeLoginModal = () => {
     setIsLoginOpen(false);
-  };
-  const openSignupModal = () => {
-    setIsSignupOpen(true);
   };
   const closeSignupModal = () => {
     setIsSignupOpen(false);
   };
+  const openSignupModal = () => {
+    setIsSignupOpen(true);
+  };
 
-  return (
-    <div className="App">
-      <div class="bg-white">
-        <header class="absolute inset-x-0 top-0 z-50">
-          <nav
-            class="flex items-center justify-between p-6 lg:px-8"
-            aria-label="Global"
-          >
-            <div class="flex lg:flex-1">
-              <a>Fit</a>
-              <p>Challenge</p>
-            </div>
+  const [seccion, setSeccion] = useState("Principal");
 
-            <div class="hidden lg:flex lg:gap-x-12">
-              <a href="#" class="text-sm/6 font-semibold text-gray-900">
-                Equipo
-              </a>
-              <a href="#" class="text-sm/6 font-semibold text-gray-900">
-                Quienes somos
-              </a>
-              <a href="#" class="text-sm/6 font-semibold text-gray-900">
-                Contáctanos
-              </a>
-            </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-              <button
-                onClick={openSignupModal}
-                class="open-modal-button text-sm/6 font-semibold text-gray-900"
-              >
-                Sign Up
-              </button>
-              <button
-                onClick={openLoginModal}
-                class="open-modal-button text-sm/6 font-semibold text-gray-900 ml-6"
-              >
-                Log in
-              </button>
-            </div>
-          </nav>
-        </header>
-        <div className="bg-image">
-          <img src={backgroundPic} alt="Background" />
-          <div className="text-overlay">
+  function mostrarContenido() {
+    switch (seccion) {
+      case "Contacto": {
+        return <Contacto />;
+      }
+      default: {
+        return (
+          <div>
             <h1>Hacer ejercicio nunca ha sido tan fácil</h1>
             <p className="texto mt-3">
               Nuestra misión es impulsar a jóvenes y adultos jóvenes a llevar
@@ -79,13 +46,34 @@ function Landing() {
             >
               Comenzar &gt;
             </button>
+          </div>);
+      }
+    }
+  }
+
+  useEffect(() => {
+    console.log("hola");
+  }, [seccion]);
+
+  return (
+    <div>
+      <Navbar setIsLoginOpen={setIsLoginOpen} setIsSignupOpen={setIsSignupOpen} setSeccion={setSeccion} />
+      <div className="App">
+        <div class="bg-white">
+          <div className="bg-image">
+            <img src={backgroundPic} alt="Background" />
+            <div className="text-overlay" id="Principal">
+              {mostrarContenido(seccion)}
+
+            </div>
+
           </div>
+          <LoginModal isOpen={isLoginOpen} onClose={closeLoginModal}></LoginModal>
+          <SignupModal isOpen={isSignupOpen} onClose={closeSignupModal} />
+          <Footer />
         </div>
-        <LoginModal isOpen={isLoginOpen} onClose={closeLoginModal}></LoginModal>
-        <SignupModal isOpen={isSignupOpen} onClose={closeSignupModal} />
       </div>
     </div>
   );
 }
-
 export default Landing;
