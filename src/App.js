@@ -4,6 +4,7 @@ import "./App.css";
 import { auth } from "./Components/Firebase/firebaseConfig"
 import Landing from "./Components/Landing/Landing";
 import Home from "./Components/Home/Home";
+import UserData from "./Components/UserData/UserData";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="*" element={<Navigate replace to={"/"} />} />
           </Route>
           <Route path="Home" element={<Home/>} />
+          <Route path="UserData" element={<UserData/>} />
           {/* <Route path="SignUp" element={<Signup />} /> */}
         </Routes>
       </BrowserRouter>

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+
 import "./SignupModal.css"; // Asegúrate de que tienes el archivo de estilos
+import { useNavigate } from "react-router-dom";
 
 const SignupModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -71,9 +74,8 @@ const SignupModal = ({ isOpen, onClose }) => {
         if (response.ok) {
           const data = await response.json();
           console.log(data); // Aquí puedes hacer algo con la respuesta si es necesario
-          alert("Usuario Creado con exito")
           limpiarForm();
-          // Aquí podrías redirigir al usuario o mostrar un mensaje de éxito
+          navigate("/UserData")
         } else {
           const errorData = await response.json();
           console.error(errorData.descripcion);

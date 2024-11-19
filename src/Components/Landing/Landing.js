@@ -4,7 +4,7 @@ import LoginModal from "../Login/LoginModal";
 import SignupModal from "../SignUp/SignupModal";
 import backgroundPic from "../../assets/background-pic.png";
 
-function Landing() {
+const Landing = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
 

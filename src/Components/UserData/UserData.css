@@ -1,0 +1,68 @@
+#principal {
+    background-image: url(../../assets/background-pic.png);
+    height: 100%;
+}
+/* Header Styles */
+.header {
+  background-color: #f0f0f0;
+  text-align: left;
+  background-image: url(../../assets/background-pic.png);
+}
+
+.header-title {
+  margin: 0;
+  font-size: 30px;
+  color: #ffffff;
+  margin-left: 3%;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+  margin-top: 10px;
+  width: 30%;
+  background-color: #aaaaaa;
+  border-radius: 5px;
+  height: 10px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+.progress-container img{
+    margin-top: 3%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.progress-container p{
+    margin-top: 3%;
+    margin-left: auto;   
+    color: #ffffff;
+}
+
+.titulo {
+    font-size: 1.5rem; /* Tamaño base */
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  @media (max-width: 768px) {
+    .titulo {
+      font-size: 1.3rem; /* Tamaño para pantallas más pequeñas */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .titulo {
+      font-size: 1rem; /* Tamaño para pantallas muy pequeñas */
+    }
+  }
