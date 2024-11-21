@@ -12,6 +12,7 @@ const {
   signOut,
 } = require("firebase/auth");
 
+//ponerlo en .env
 const firebaseConfig = {
   apiKey: "AIzaSyByPdmDGUvprnHDqc_mMrS3E3yyY-ysYnE",
   authDomain: "proyectotecemergentes.firebaseapp.com",
@@ -32,6 +33,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 let port = 3001;
 
+//ponerlo en .env
 const uri =
   "mongodb+srv://hamjosue33:LTEs63Q8Za5KeOQe@cluster0.ca8ad.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
