@@ -1,0 +1,52 @@
+.challenge-carousel {
+    padding: 90px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+  }
+  
+  .challenge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .challenge-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .arrow {
+    font-size: 20px;
+  }
+  
+  .challenge-list {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+  
+  .challenge-item {
+    flex-shrink: 0;
+    width: 150px;
+    text-align: center;
+  }
+  
+  .challenge-image img {
+    width: 100%;
+    border-radius: 8px;
+    height: auto;
+  }
+  
+  .challenge-name {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .no-challenges {
+    color: gray;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+  }  
