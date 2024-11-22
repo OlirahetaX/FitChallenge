@@ -26,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/">
             {/* <Route index element={<Landing />} /> */}
-            <Route index element={<Home />} />
+            <Route index element={<Landing />} />
             <Route path="*" element={<Navigate replace to={"/"} />} />
           </Route>
           <Route path="Home" element={<Home/>} />
