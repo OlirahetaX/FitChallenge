@@ -19,7 +19,7 @@ const Home = () => {
       <Info/>
       <button class=" mb-2 bg-blue-500 hover:bg-blue-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
       onClick={regresar}>
-        regresar
+        Regresar
       </button>
     </div>
   );
