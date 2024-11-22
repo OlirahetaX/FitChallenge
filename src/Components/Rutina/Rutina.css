@@ -1,0 +1,58 @@
+  .routine-carousel {
+    border-radius: 8px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    margin-left: 90px;
+    margin-right: 12px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #f4f4f4;
+  }
+  
+  .routine-header {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .arrow {
+    margin-left: 20px;
+    font-size: 30px;
+  }
+  
+  .exercise-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  
+  .exercise-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .exercise-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .exercise-name {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .no-exercises {
+    font-size: 16px;
+    color: gray;
+    text-align: center;
+    margin-top: 20px;
+  }  

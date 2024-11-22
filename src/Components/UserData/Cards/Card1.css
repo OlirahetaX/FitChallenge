@@ -30,7 +30,9 @@
 
 @media (max-width: 768px) {
   .card-title {
-    font-size: 1.2rem; /* Tamaño para pantallas más pequeñas */
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    color: black;
   }
   .card-description {
     font-size: 0.6rem;

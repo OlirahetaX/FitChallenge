@@ -25,7 +25,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route index element={<Landing />} />
+            {/* <Route index element={<Landing />} /> */}
+            <Route index element={<Home />} />
             <Route path="*" element={<Navigate replace to={"/"} />} />
           </Route>
           <Route path="Home" element={<Home/>} />
