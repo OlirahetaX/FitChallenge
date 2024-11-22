@@ -3,12 +3,12 @@ import React from 'react';
 
 
 
-const Card1 = ({ title, description }) => {
+const Card1 = ({ title, description, Handleonclick, name }) => {
   
   return (
-    <div className="card">
+    <div className="card" onClick={() => Handleonclick(name, title)}>
       <h2 className="card-title">{title}</h2>
-      <p className="card-description">{description}</p>
+      <h2 className="card-description">{description}</h2>
     </div>
   );
 };

@@ -116,3 +116,39 @@ app.post("/logOut", async (req, res) => {
     });
   }
 });
+
+app.post('/addUserData', async (req, res) => {
+  try {
+    const client = new MongoClient(uri);
+    await client.connect();
+    const database = client.db('FitChallenge');
+    const collection = database.collection('Usuario');
+    
+    const resultado = await collection.insertOne({
+      objetivo: req.body.objetivo,
+      edad: req.body.edad,
+      genero: req.body.genero,
+      peso: req.body.peso,
+      experiencia: req.body.experiencia,
+      dias_disponibles: req.body.dias_disponibles,
+      ubicacion: req.body.ubicacion,
+      condicion_fisica: req.body.condicion_fisica,
+      tiempo_disponible: req.body.tiempo_disponible,
+      nombre: req.body.nombre,
+      apellido: req.body.apellido,
+      altura: req.body.altura,
+    });
+
+    res.status(200).send({
+      mensaje: "Documento creado con éxito en MongoDB",
+      result: resultado,
+    });
+
+    await client.close();
+  } catch (error) {
+    res.status(500).send({
+      mensaje: "No se pudo crear el Documento en MongoDB",
+      error: error.message,
+    });
+  }
+});
