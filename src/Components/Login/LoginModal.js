@@ -14,7 +14,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setError(false)
+    setError(false);
     setFormData({
       ...formData,
       [name]: value,
@@ -36,8 +36,20 @@ const LoginModal = ({ isOpen, onClose, children }) => {
       });
       if (response.ok) {
         const data = await response.json();
+        const uid = data.result.user.uid;
         limpiarForm();
-        navigate("/Home");
+
+        const response2 = await fetch(
+          `http://localhost:3001/checkUser/${uid}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          }
+        );
+        if (response2.status === 200) navigate(`/Home?uid=${uid}`);
+        else navigate(`/UserData?uid=${uid}`);
       } else {
         const errorData = await response.json();
         console.error(errorData.descripcion);
@@ -79,7 +91,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
             <div class="mb-4">
               <label
                 class="text-left block text-gray-700 text-xs font-bold mb-2"
-                for="email"
+                htmlFor="email"
               >
                 Correo electrónico
               </label>
@@ -97,7 +109,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
             <div class="mb-2">
               <label
                 class="block text-left text-gray-700 text-xs font-bold mb-2"
-                for="password"
+                htmlFor="password"
               >
                 Contraseña
               </label>

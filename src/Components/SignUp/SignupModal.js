@@ -73,9 +73,10 @@ const SignupModal = ({ isOpen, onClose }) => {
         // Verificar si la respuesta es exitosa
         if (response.ok) {
           const data = await response.json();
+          const uidNewUser = data.result.user.uid
           console.log(data); // Aquí puedes hacer algo con la respuesta si es necesario
           limpiarForm();
-          navigate("/UserData")
+          navigate(`/UserData?uid=${uidNewUser}`)
         } else {
           const errorData = await response.json();
           console.error(errorData.descripcion);
@@ -116,7 +117,7 @@ const SignupModal = ({ isOpen, onClose }) => {
             <div class="mb-4">
               <label
                 class="text-left block text-gray-700 text-xs font-bold mb-2"
-                for="email"
+                htmlFor="email"
               >
                 Correo electrónico
               </label>
@@ -134,7 +135,7 @@ const SignupModal = ({ isOpen, onClose }) => {
             <div class="mb-2">
               <label
                 class="block text-left text-gray-700 text-xs font-bold mb-2"
-                for="password"
+                htmlFor="password"
               >
                 Contraseña
               </label>
@@ -155,7 +156,7 @@ const SignupModal = ({ isOpen, onClose }) => {
             <div class="mb-2">
               <label
                 class="block text-left text-gray-700 text-xs font-bold mb-2"
-                for="password"
+                htmlFor="password"
               >
                 Confirmar contraseña
               </label>

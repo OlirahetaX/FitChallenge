@@ -1,11 +1,13 @@
 import "./UserData.css";
-import backgroundPic from "../../assets/background-pic.png";
 import back from "../../assets/back.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Card1 from "./Cards/Card1";
 
 const UserData = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const uid = params.get("uid");
   const [formData, setFormData] = useState({
     objetivo: "",
     edad: "",
@@ -19,7 +21,7 @@ const UserData = () => {
     nombre: "",
     apellido: "",
     altura: "",
-    // id: "",
+    id: uid,
   });
   const [edad, setEdad] = useState("");
   const [altura, setaltura] = useState("");
@@ -146,13 +148,14 @@ const UserData = () => {
         nombre: formData.nombre,
         apellido: formData.apellido,
         altura: formData.altura,
+        id: uid,
       }).toString(),
     })
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error("Error:", error));
 
-      navigate("/Home")
+    navigate(`/Home?uid=${uid}`);
   };
   const Handleonclick = (name, title) => {
     setFormData((prevFormData) => ({
@@ -190,7 +193,7 @@ const UserData = () => {
             <img src={back} alt="previous-arrow" onClick={reduceCounter} />
             <p>{counter}/10</p>
           </div>
-          {counter == 1 && (
+          {counter === 1 && (
             <div className="container">
               <h1 className="titulo">¿Cual es tu objetivo principal?</h1>
               <div className="cards-container">
@@ -215,7 +218,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 2 && (
+          {counter === 2 && (
             <div className="container">
               <h1 className="titulo">
                 ¿Tienes experiencia previa con el ejercicio?
@@ -242,7 +245,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 3 && (
+          {counter === 3 && (
             <div className="container">
               <h1 className="titulo">¿Tu genero?</h1>
               <div className="cards-container" style={{ gap: "20px" }}>
@@ -261,7 +264,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 4 && (
+          {counter === 4 && (
             <div className="container">
               <h1 className="titulo">¿Cual es tu edad?</h1>
               <div className="flex flex-col items-start">
@@ -290,7 +293,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 5 && (
+          {counter === 5 && (
             <div className="container">
               <h1 className="titulo">¿Cual es tu peso y altura?</h1>
               <div className="flex flex-col items-start">
@@ -343,7 +346,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 6 && (
+          {counter === 6 && (
             <div className="container">
               <h1 className="titulo">
                 ¿Cuantos dias a la semana haras ejercicio?
@@ -387,7 +390,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 7 && (
+          {counter === 7 && (
             <div className="container">
               <h1 className="titulo">¿Donde haras ejercicio?</h1>
               <div className="cards-container" style={{ gap: "20px" }}>
@@ -404,7 +407,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 8 && (
+          {counter === 8 && (
             <div className="container">
               <h1 className="titulo">
                 ¿Tienes alguna condicion fisica o lesion?
@@ -431,7 +434,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 9 && (
+          {counter === 9 && (
             <div className="container">
               <h1 className="titulo">
                 ¿Cuánto tiempo puedes dedicar a cada sesión?
@@ -452,9 +455,9 @@ const UserData = () => {
                         viewBox="0 0 24 24"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         />
                       </svg>
                     </div>
@@ -477,7 +480,7 @@ const UserData = () => {
               </div>
             </div>
           )}
-          {counter == 10 && (
+          {counter === 10 && (
             <div className="container">
               <div className="flex flex-col items-start">
                 <label className="mb-2 text-sm font-medium text-gray-100 subtitulo">
@@ -528,7 +531,7 @@ const UserData = () => {
           )}
         </div>
       )}
-      {counter == 11 && (
+      {counter === 11 && (
         <div className="containerbox">
           <div className="box">
             <h2>Felicidades 🎉</h2>
