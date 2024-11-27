@@ -26,12 +26,11 @@ function Navbar({setIsLoginOpen, setIsSignupOpen, setSeccion}) {
           </div>
 
           <div className="hidden lg:flex lg:gap-x-12">
-            <a href="#" className="text-sm/6 font-semibold text-gray-900">
-              Equipo
-            </a>
-            <a href="#" className="text-sm/6 font-semibold text-gray-900">
+            <button className="text-sm/6 font-semibold text-gray-900" onClick={() => {
+              setSeccion("AboutUs");
+            }}>
               Quienes somos
-            </a>
+            </button>
             <button className="text-sm/6 font-semibold text-gray-900" onClick={() => {
               setSeccion("Contacto");
             }}>

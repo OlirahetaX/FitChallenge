@@ -4,6 +4,15 @@ var urlEncodeParser = bodyParser.urlencoded({ extended: true });
 
 const { ServerApiVersion, MongoClient } = require("mongodb");
 const { initializeApp } = require("firebase/app");
+
+// ENCRIPTACION DE DATOS
+/*
+Firebase Authentication usa los datos para habilitar la autenticación del usuario final y facilitar 
+la administración de su cuenta. También usa strings usuario-agente y direcciones IP para ofrecer 
+seguridad adicional y prevenir el abuso durante el registro y la autenticación.
+
+Los servicios de Firebase encriptan datos en tránsito con HTTPS y datos de clientes aislados de manera lógica.
+*/
 const {
   getAuth,
   createUserWithEmailAndPassword,
@@ -120,13 +129,13 @@ app.post("/logOut", async (req, res) => {
   }
 });
 
-app.post('/addUserData', async (req, res) => {
+app.post("/addUserData", async (req, res) => {
   try {
     const client = new MongoClient(uri);
     await client.connect();
-    const database = client.db('FitChallenge');
-    const collection = database.collection('Usuario');
-    
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Usuario");
+
     // Verifica que se envíe un id en la solicitud
     if (!req.body.id) {
       return res.status(400).send({
@@ -192,7 +201,9 @@ app.get("/user/:id", async (req, res) => {
     res.status(200).json(user); // Responder con el usuario encontrado
   } catch (err) {
     console.error("Error retrieving user:", err);
-    res.status(500).json({ message: "Error retrieving user", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving user", error: err.message });
   }
 });
 
@@ -206,14 +217,16 @@ app.get("/checkUser/:uid", async (req, res) => {
 
     // Buscar el usuario por uid (o cualquier campo que corresponda al identificador)
     const user = await collection.findOne({ _id: userUid });
-    
+
     if (user) {
-      return res.status(200).json({ message: "User exists"});
+      return res.status(200).json({ message: "User exists" });
     } else {
       return res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
     console.error("Error retrieving user:", err);
-    res.status(500).json({ message: "Error retrieving user", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving user", error: err.message });
   }
 });
