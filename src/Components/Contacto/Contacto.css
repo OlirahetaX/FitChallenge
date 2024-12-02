@@ -1,47 +1,69 @@
+#principalC {
+  background-image: url(../../assets/background-pic.png);
+  height: 100%;
+}
+.headerC {
+  background-color: #f0f0f0;
+  text-align: left;
+  background-image: url(../../assets/background-pic.png);
+}
+
+.headerC-title {
+  margin: 0;
+  font-size: 30px;
+  color: #ffffff;
+  margin-left: 3%;
+  font-weight: 500;
+  font-style: italic;
+}
+.contacto-form {
+  margin-top: 3rem;
+}
+
 .contacto-container {
-    background-color: #002244; 
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-  }
-  
-  .contacto-content {
-    background-color: #002244; 
-    border-radius: 10px;
-    text-align: center;
-    width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .contacto-form input {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    color: black;  
-  }
-  
-  .contacto-form button {
-    background-color: #ffa500; 
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .contacto-form button:hover {
-    background-color: #cc8400; 
-  }
-  
+  width: 30%;
+  border-radius: 5px;
+  height: 10px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contacto-container img {
+  margin-top: 3%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.contacto-form input {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: black;
+}
+
+
+.contacto-form button {
+  background-color: #ffa500;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.contacto-form button:hover {
+  background-color: #cc8400;
+}

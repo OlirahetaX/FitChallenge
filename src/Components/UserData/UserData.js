@@ -8,6 +8,7 @@ const UserData = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const uid = params.get("uid");
+  const email = params.get("email");
   const [formData, setFormData] = useState({
     objetivo: "",
     edad: "",
@@ -22,6 +23,7 @@ const UserData = () => {
     apellido: "",
     altura: "",
     id: uid,
+    email: email 
   });
   const [edad, setEdad] = useState("");
   const [altura, setaltura] = useState("");
@@ -149,14 +151,24 @@ const UserData = () => {
         apellido: formData.apellido,
         altura: formData.altura,
         id: uid,
+        email: email,
       }).toString(),
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
-
-    navigate(`/Home?uid=${uid}`);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Data saved:", data);
+        navigate(`/Home?uid=${uid}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+
   const Handleonclick = (name, title) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -444,11 +456,11 @@ const UserData = () => {
                   Selecciona tu tiempo:
                 </label>
 
-                <form class="max-w-[8rem] mx-auto">
-                  <div class="relative">
-                    <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                <form className="max-w-[8rem] mx-auto">
+                  <div className="relative">
+                    <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
                       <svg
-                        class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -466,7 +478,7 @@ const UserData = () => {
                       id="time"
                       value={tiempo_disponible}
                       onChange={manejarCambioTiempo}
-                      class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required
                     />
                   </div>

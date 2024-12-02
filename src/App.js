@@ -4,6 +4,9 @@ import "./App.css";
 import Landing from "./Components/Landing/Landing";
 import Home from "./Components/Home/Home";
 import UserData from "./Components/UserData/UserData";
+import Profile from "./Components/Profile/Profile";
+import Settings from "./Components/Settings/Settings";
+import Contacto from "./Components/Contacto/Contacto";
 
 function App() {
 
@@ -23,6 +26,9 @@ function App() {
           </Route>
           <Route path="Home" element={<Home/>} />
           <Route path="UserData" element={<UserData/>} />
+          <Route path="Profile" element={<Profile/>} />
+          <Route path="Settings" element={<Settings/>} />
+          <Route path="Help" element={<Contacto/>} />
         </Routes>
       </BrowserRouter>
     </div>

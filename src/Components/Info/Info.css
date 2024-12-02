@@ -53,11 +53,17 @@
   position: relative;
 }
 
+.info-item{
+  transition: transform 0.3s ease;
+}
 .info-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   cursor: pointer;
+}
+.info-item:hover {
+  transform: scale(1.2);
 }
 
 .info-container span {

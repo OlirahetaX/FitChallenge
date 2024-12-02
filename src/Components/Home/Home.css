@@ -1,0 +1,18 @@
+.img-profile {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 7rem;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.Home-bg {
+  background: linear-gradient(135deg, #f0f4ffb7, #dce7f9);
+  height: 100%;
+}
+.img-ajustes{
+    margin-left: 85%;
+}
+.img-profile:hover {
+    transform: scale(1.2);
+}

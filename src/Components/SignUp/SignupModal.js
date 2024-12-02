@@ -74,9 +74,9 @@ const SignupModal = ({ isOpen, onClose }) => {
         if (response.ok) {
           const data = await response.json();
           const uidNewUser = data.result.user.uid
-          console.log(data); // Aquí puedes hacer algo con la respuesta si es necesario
+          const userEmail = formData.email
           limpiarForm();
-          navigate(`/UserData?uid=${uidNewUser}`)
+          navigate(`/UserData?uid=${uidNewUser}&email=${userEmail}`)
         } else {
           const errorData = await response.json();
           console.error(errorData.descripcion);
@@ -110,19 +110,19 @@ const SignupModal = ({ isOpen, onClose }) => {
         <button className="close-button" onClick={cerrarModal}>
           &times;
         </button>
-        <label class="block font-bold text-gray-700 mb-4">Sign Up</label>
+        <label className="block font-bold text-gray-700 mb-4">Sign Up</label>
 
-        <div class="w-full max-w-xs">
-          <form class="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmit}>
-            <div class="mb-4">
+        <div className="w-full max-w-xs">
+          <form className="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmit}>
+            <div className="mb-4">
               <label
-                class="text-left block text-gray-700 text-xs font-bold mb-2"
+                className="text-left block text-gray-700 text-xs font-bold mb-2"
                 htmlFor="email"
               >
                 Correo electrónico
               </label>
               <input
-                class="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
                 type="email"
                 name="email"
@@ -132,15 +132,15 @@ const SignupModal = ({ isOpen, onClose }) => {
                 placeholder="Correo electrónico"
               />
             </div>
-            <div class="mb-2">
+            <div className="mb-2">
               <label
-                class="block text-left text-gray-700 text-xs font-bold mb-2"
+                className="block text-left text-gray-700 text-xs font-bold mb-2"
                 htmlFor="password"
               >
                 Contraseña
               </label>
               <input
-                class="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
                 type="password"
                 name="password"
@@ -150,18 +150,18 @@ const SignupModal = ({ isOpen, onClose }) => {
                 placeholder="**********"
               />
               {passwordError && (
-                <p class="text-red-500 text-xs italic">{passwordError}</p>
+                <p className="text-red-500 text-xs italic">{passwordError}</p>
               )}
             </div>
-            <div class="mb-2">
+            <div className="mb-2">
               <label
-                class="block text-left text-gray-700 text-xs font-bold mb-2"
+                className="block text-left text-gray-700 text-xs font-bold mb-2"
                 htmlFor="password"
               >
                 Confirmar contraseña
               </label>
               <input
-                class="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="confirmPassword"
                 type="Password"
                 name="confirmPassword"
@@ -171,14 +171,14 @@ const SignupModal = ({ isOpen, onClose }) => {
                 placeholder="**********"
               />
               {confirmPasswordError && (
-                <p class="text-red-500 text-xs italic">
+                <p className="text-red-500 text-xs italic">
                   {confirmPasswordError}
                 </p>
               )}
             </div>
 
             <button
-              class=" mb-2 bg-blue-500 hover:bg-blue-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
+              className=" mb-2 bg-blue-500 hover:bg-blue-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Sign Up

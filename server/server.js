@@ -158,6 +158,7 @@ app.post("/addUserData", async (req, res) => {
       nombre: req.body.nombre,
       apellido: req.body.apellido,
       altura: req.body.altura,
+      email: req.body.email
     };
 
     const resultado = await collection.insertOne(documento);

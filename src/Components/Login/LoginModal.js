@@ -52,7 +52,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
           }
         );
         if (response2.status === 200) navigate(`/Home?uid=${uid}`);
-        else navigate(`/UserData?uid=${uid}`);
+        else navigate(`/UserData?uid=${uid}&email=${formData.email}`);
       } else {
         const errorData = await response.json();
         console.error(errorData.descripcion);
@@ -82,26 +82,26 @@ const LoginModal = ({ isOpen, onClose, children }) => {
         </button>
         {!resetPword && (
           <>
-            <div class="content-center mb-4">
+            <div className="content-center mb-4">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png"
                 alt="User Icon"
                 style={{ width: "100px", height: "100px" }}
               />
-              <label class="block font-bold text-gray-700">Log In</label>
+              <label className="block font-bold text-gray-700">Log In</label>
             </div>
 
-            <div class="w-full max-w-xs">
-              <form class="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmit}>
-                <div class="mb-4">
+            <div className="w-full max-w-xs">
+              <form className="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmit}>
+                <div className="mb-4">
                   <label
-                    class="text-left block text-gray-700 text-xs font-bold mb-2"
+                    className="text-left block text-gray-700 text-xs font-bold mb-2"
                     htmlFor="email"
                   >
                     Correo electrónico
                   </label>
                   <input
-                    class="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="email"
                     type="email"
                     name="email"
@@ -111,15 +111,15 @@ const LoginModal = ({ isOpen, onClose, children }) => {
                     placeholder="Correo electrónico"
                   />
                 </div>
-                <div class="mb-2">
+                <div className="mb-2">
                   <label
-                    class="block text-left text-gray-700 text-xs font-bold mb-2"
+                    className="block text-left text-gray-700 text-xs font-bold mb-2"
                     htmlFor="password"
                   >
                     Contraseña
                   </label>
                   <input
-                    class="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none text-xs border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     id="password"
                     type="password"
                     name="password"
@@ -130,7 +130,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
                   />
                 </div>
                 <a
-                  class="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
+                  className="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
                   onClick={() => {
                     setResetPword(true);
                   }}
@@ -139,7 +139,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
                 </a>
 
                 <button
-                  class=" mb-2 bg-blue-500 hover:bg-blue-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
+                  className=" mb-2 bg-blue-500 hover:bg-blue-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
                   Log In
@@ -148,16 +148,16 @@ const LoginModal = ({ isOpen, onClose, children }) => {
             </div>
             {Error && (
               <div
-                class="p-2 text-sm text-red-500 rounded-lg bg-red-200 "
+                className="p-2 text-sm text-red-500 rounded-lg bg-red-200 "
                 role="alert"
               >
-                <span class="font-medium">Datos Incorrectos!</span>
+                <span className="font-medium">Datos Incorrectos!</span>
               </div>
             )}
           </>
         )}
         {resetPword && (
-          <div class="w-full max-w-xs">
+          <div className="w-full max-w-xs">
             <label className="block text-xl mt-3 font-bold text-gray-700">
               Ayuda con la contraseña
             </label>
@@ -165,16 +165,16 @@ const LoginModal = ({ isOpen, onClose, children }) => {
               Escribe la dirección de correo electrónico asociado a tu cuenta de
               FitChallenge.
             </label>
-            <form class="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmitPword}>
-              <div class="mb-4">
+            <form className="px-4 pt-2 pb-2 mb-2" onSubmit={handleSubmitPword}>
+              <div className="mb-4">
                 <label
-                  class="text-left block text-gray-700 text-xs font-bold mb-2"
+                  className="text-left block text-gray-700 text-xs font-bold mb-2"
                   htmlFor="email"
                 >
                   Correo electrónico
                 </label>
                 <input
-                  class="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow text-xs appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="email2"
                   type="email"
                   name="email"
@@ -185,13 +185,13 @@ const LoginModal = ({ isOpen, onClose, children }) => {
                 />
               </div>
               <button
-                class=" mb-2 bg-red-500 hover:bg-red-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
+                className=" mb-2 bg-red-500 hover:bg-red-700 text-white  py-1 px-20 rounded hover:font-bold focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Continuar
               </button>
               <a
-                class="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
+                className="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
                 onClick={() => {
                   setResetPword(false);
                 }}

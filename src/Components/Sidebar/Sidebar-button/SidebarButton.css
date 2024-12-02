@@ -1,0 +1,21 @@
+.button-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    background-color: #e6e5e5;
+    border-radius: 10px;
+    margin: 2%;
+    cursor: pointer;
+    height: 50px;
+}
+
+.button-bg h3 {
+    margin: 0; 
+    text-align: center; 
+}
+
+.button-bg:hover {
+    background-color: #d3d1d1;
+
+}

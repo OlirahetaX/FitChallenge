@@ -7,10 +7,12 @@ import Footer from "../Footer/Footer";
 import Contacto from "../Contacto/Contacto";
 import Navbar from "../Navbar/Navbar";
 import AboutUs from "../AboutUsPage/AboutUs";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const navigate = useNavigate();
 
   const closeLoginModal = () => {
     setIsLoginOpen(false);
@@ -27,7 +29,7 @@ const Landing = () => {
   function mostrarContenido() {
     switch (seccion) {
       case "Contacto": {
-        return <Contacto />;
+        navigate(`/Help?uid=1`);
       }
       case "AboutUs": {
         return <AboutUs/>;      
