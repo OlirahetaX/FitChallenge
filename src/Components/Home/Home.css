@@ -8,7 +8,9 @@
 }
 .Home-bg {
   background: linear-gradient(135deg, #f0f4ffb7, #dce7f9);
-  height: 100%;
+  min-height: 100vh;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
 }
 .img-ajustes{
     margin-left: 85%;

@@ -132,7 +132,9 @@ const LoginModal = ({ isOpen, onClose, children }) => {
                 <a
                   className="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
                   onClick={() => {
+                    limpiarForm();
                     setResetPword(true);
+                    
                   }}
                 >
                   ¿Olvidaste tu contraseña?
@@ -193,6 +195,7 @@ const LoginModal = ({ isOpen, onClose, children }) => {
               <a
                 className="mb-2 block text-left font-bold text-xs text-blue-500 cursor-pointer hover:text-blue-800 hover:underline"
                 onClick={() => {
+                  limpiarForm();
                   setResetPword(false);
                 }}
               >

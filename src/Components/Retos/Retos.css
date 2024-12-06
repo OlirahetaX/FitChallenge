@@ -1,15 +1,16 @@
 .challenge-carousel {
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 20px;
-  margin-left: 90px;
-  margin-right: 12px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5.7rem;
+  margin-right: 0.7rem;
+  background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  overflow-x: hidden;
 }
 
 .challenge-header {
@@ -20,39 +21,79 @@
   font-size: 24px;
   font-weight: bold;
 }
-
-.arrow {
+.challenge-arrow  {
   font-size: 20px;
+  margin-left: 1rem;
 }
 
-.challenge-list {
+.challenge-carousel ul {
   display: flex;
-  gap: 16px;
+  gap: 5px;
   overflow-x: auto;
   padding: 10px 0;
+  margin: 0;
+  list-style: none;
+}
+
+.challenge-carousel ul::-webkit-scrollbar {
+  height: 7px;
+}
+
+.challenge-carousel ul::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.challenge-carousel ul::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.challenge-carousel ul div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: min-content;
+}
+
+.challenge-carousel li {
+  color: #fff;
+  margin-left: 8px;
+  border-radius: 1rem;
+  transition: background 0.3s;
+  width: 300px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .challenge-item {
-  flex-shrink: 0;
-  width: 150px;
-  text-align: center;
+  transition: transform 0.3s ease;
+  margin-left: 6px;
 }
 
-.challenge-image img {
+.challenge-item img {
   width: 100%;
-  border-radius: 8px;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
 }
 
-.challenge-name {
+.challenge-item:hover {
+  transform: scale(1.1);
+}
+
+.challenge-carousel span {
   margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
+  color: #333;
+  text-align: center;
+  cursor: pointer;
 }
 
-.no-challenges {
-  color: gray;
-  font-size: 18px;
-  text-align: center;
-  margin-top: 20px;
+.challenge-carousel .exercise-item :hover {
+  color: #2630ba;
 }

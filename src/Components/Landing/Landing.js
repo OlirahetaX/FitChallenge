@@ -25,6 +25,7 @@ const Landing = () => {
   };
 
   const [seccion, setSeccion] = useState("Principal");
+  
 
   function mostrarContenido() {
     switch (seccion) {

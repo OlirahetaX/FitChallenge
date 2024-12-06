@@ -8,23 +8,18 @@ const ChallengeCarousel = ({ challenges }) => {
     <div className="challenge-carousel">
       <div className="challenge-header">
         <h2>Retos de la Comunidad</h2>
-        <span className="arrow">→</span>
+        <h2 className="challenge-arrow">→</h2>
       </div>
-
-      {validChallenges.length > 0 ? (
-        <div className="challenge-list">
-          {validChallenges.map((challenge) => (
-            <div key={challenge.id} className="challenge-item">
-              <div className="challenge-image">
-                <img src={challenge.img} alt={challenge.name} />
-              </div>
-              <p className="challenge-name">{challenge.name}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="no-challenges">No hay retos disponibles</p>
-      )}
+      <ul>
+        {validChallenges.map((challenge) => (
+          <div key={challenge.id} className="exercise-item">
+            <li>
+              <img src={challenge.img} alt={challenge.nombre} />
+            </li>
+            <span>{challenge.nombre}</span>
+          </div>
+        ))}
+      </ul>
     </div>
   );
 };

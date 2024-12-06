@@ -46,6 +46,81 @@ const Home = () => {
   const navigateToHelp = () => {
     navigate(`/Help?uid=${uid}`);
   };
+
+  const exampleExercises = [
+    {
+      id: 1,
+      nombre: "Press de banca",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      descanso: 10,
+      categoria: "Pecho",
+      series: 4,
+      repeticiones: 12,
+      peso: 50,
+      video: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      terminado: false
+    },
+    {
+      id: 2,
+      nombre: "Flexiones",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      descanso: 10,
+      categoria: "Pecho",
+      series: 4,
+      repeticiones: 12,
+      peso: 50,
+      video: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      terminado: true
+    },
+    {
+      id: 3,
+      nombre: "Plancha",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 4,
+      nombre: "Burpees",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 5,
+      nombre: "Zancadas",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 3,
+      nombre: "Plancha",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 4,
+      nombre: "Burpees",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 5,
+      nombre: "Zancadas",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 3,
+      nombre: "Plancha",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 4,
+      nombre: "Burpees",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    },
+    {
+      id: 5,
+      nombre: "Zancadas",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+    }
+  ];
+  
   return (
     <div className="Home-bg">
       <div className="flex">
@@ -63,8 +138,8 @@ const Home = () => {
         />
       </div>
       <Sidebar user={user} navigateToHelp={navigateToHelp} navigateToSettings={navigateToSettings} navigateToProfile={navigateToProfile} />
-      <Rutina />
-      <Retos />
+      <Rutina user={user} exercises={exampleExercises}/>
+      <Retos challenges={exampleExercises}/>
       <Info />
     </div>
   );

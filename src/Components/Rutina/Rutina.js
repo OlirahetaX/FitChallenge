@@ -1,30 +1,26 @@
 import React from "react";
 import "./Rutina.css";
+import { useNavigate } from "react-router-dom";
+import CircularItem from "../CircularItem/CircularItem";
 
-const RoutineCarousel = ({ exercises }) => {
+const RoutineCarousel = ({ exercises, user }) => {
   const validExercises = Array.isArray(exercises) ? exercises : [];
 
+  const handleOnClick = (exercise) => {
+    navigate('/Ejercicio', { state: { user, exercise } });
+  }
+  const navigate = useNavigate()
   return (
     <div className="routine-carousel">
       <div className="routine-header">
         <h2>Rutina de hoy</h2>
-        <span className="arrow">→</span>
+        <h2 className="info-arrow">→</h2>
       </div>
-
-      {validExercises.length > 0 ? (
-        <div className="exercise-list">
-          {validExercises.map((exercise) => (
-            <div key={exercise.id} className="exercise-item">
-              <div className="exercise-image">
-                <img src={exercise.img} alt={exercise.name} />
-              </div>
-              <p className="exercise-name">{exercise.name}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="no-exercises">No hay ejercicios añadidos</p>
-      )}
+      <ul>
+        {validExercises.map((exercise) => (
+          <CircularItem item={exercise} onclick={handleOnClick}/>
+        ))}
+      </ul>
     </div>
   );
 };

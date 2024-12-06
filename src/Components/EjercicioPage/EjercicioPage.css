@@ -1,0 +1,199 @@
+.exercise-bg {
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(135deg, #f0f4ff, #dce7f9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+}
+
+.exercise-wrapper {
+  display: flex;
+  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.exercise-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+.exercise-avatar {
+  display: flex;
+}
+
+.exercise-avatar img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(0, 123, 255, 0.3);
+}
+
+.exercise-card-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-left: 1rem;
+  margin-bottom: 10px;
+  color: #007bff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.title p {
+  font-size: 14px;
+  margin-left: 1rem;
+  text-align: start;
+  color: #868585;
+}
+.exercise-card-info {
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  margin-bottom: 20px;
+}
+
+.exercise-info {
+  display: flex;
+  justify-content: space-between; /* Espacio uniforme entre las cajas */
+  width: 100%;
+}
+
+.info-box {
+  flex: 1;
+  width: 10rem;
+  margin: 0 0.3rem;
+  background-color: #0b76e91c;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.instrucciones {
+  text-align: start;
+}
+
+.instrucciones h3 {
+  margin-left: 1.5rem;
+}
+
+.instrucciones p {
+  padding-left: 3rem;
+}
+
+.info-box h3 {
+  color: #007bff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+.exercise-card-info p {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #555;
+}
+
+.exercise-card-info img {
+  margin-top: 1rem;
+  border-radius: 1rem;
+  width: 98%;
+  height: 200px;
+  display: inline-block; /* Para que funcione con text-align */
+}
+
+.exercise-card-info span {
+  font-weight: bold;
+  color: #007bff;
+}
+.timer-box {
+  margin: 1rem 0.3rem;
+  background-color: #2f00ffd4;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0.5rem;
+}
+.timer-box h1 {
+  color: white;
+  font-weight: bold;
+  font-size: xx-large;
+  margin-bottom: 0rem;
+}
+.timer-box h2 {
+  color: white;
+  font-weight: bold;
+}
+.exercise-button {
+  padding: 0.5rem;
+  background: #007bff;
+  color: white;
+  width: 98%;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.exercise-button:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+.start-button {
+  padding: 8px 20px;
+  background: rgb(3, 200, 3);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+}
+.start-button:hover {
+  background: rgb(4, 154, 4);
+  transform: scale(1.1);
+}
+
+.restart-button {
+  padding: 8px 20px;
+  background: rgb(255, 7, 7);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.restart-button:hover {
+  background: rgb(154, 4, 4);
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exercise-error {
+  text-align: center;
+  color: #d32f2f;
+}
+
+.exercise-error h2 {
+  font-size: 28px;
+}
+
+.exercise-error p {
+  font-size: 18px;
+}
