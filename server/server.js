@@ -231,3 +231,104 @@ app.get("/checkUser/:uid", async (req, res) => {
       .json({ message: "Error retrieving user", error: err.message });
   }
 });
+
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI("AIzaSyAIrkKxvTlLwU_XykSMmU5Rdabt7_m1I54");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+app.post("/generateRoutine", async (req, res) => {
+  try {
+    const {
+      nombre,
+      apellido,
+      objetivo,
+      edad,
+      genero,
+      peso,
+      experiencia,
+      dias_disponibles,
+      ubicacion,
+      condicion_fisica,
+      tiempo_disponible,
+      altura,
+    } = req.body;
+
+    const prompt = `
+      Genera una rutina personalizada basada en los siguientes datos del usuario:
+      - Nombre: ${nombre} ${apellido}
+      - Objetivo: ${objetivo}
+      - Edad: ${edad}
+      - Género: ${genero}
+      - Peso: ${peso} kg
+      - Altura: ${altura} cm
+      - Experiencia: ${experiencia}
+      - Días disponibles: ${dias_disponibles}
+      - Ubicación: ${ubicacion}
+      - Condición física: ${condicion_fisica}
+      - Tiempo disponible por sesión: ${tiempo_disponible} minutos
+
+      La respuesta debe ser exclusivamente un JSON válido con esta estructura:
+      {
+        "rutina_id": int,
+        "nombre_rutina": string,
+        "descripcion": text,
+        "duracion": int,
+        "nivel": string,
+        "objetivo": string,
+        "sesiones": [
+          {
+            "dia": string,
+            "ejercicios": [
+              { "nombre": string, "series": int, "repeticiones": int (debe ser un número o un rango de números), "descanso": int }
+            ]
+          }
+        ]
+      }
+
+      No incluyas texto adicional fuera del JSON. Usa únicamente valores numéricos para "repeticiones", como un rango de repeticiones (por ejemplo, "8-12").
+    `;
+
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error(`No se encontró un JSON válido en la respuesta de la IA: ${responseText}`);
+    }
+
+    
+    let routineData;
+    try {
+      routineData = JSON.parse(jsonMatch[0]);
+
+      routineData.sesiones.forEach(session => {
+        session.ejercicios.forEach(exercise => {
+          if (typeof exercise.repeticiones === 'string' && exercise.repeticiones === 'Máximo') {
+            exercise.repeticiones = 15;
+          }
+        });
+      });
+    } catch (error) {
+      throw new Error(`Error al analizar el JSON extraído: ${jsonMatch[0]}. Error: ${error.message}`);
+    }
+
+    const database = client.db("FitChallenge");
+    const routinesCollection = database.collection("Rutinas");
+
+    const response = await routinesCollection.insertOne(routineData);
+
+    res.status(200).send({
+      message: "Rutina generada y almacenada con éxito",
+      rutina: routineData,
+      id: response.insertedId,
+    });
+  } catch (error) {
+    console.error("Error generando rutina:", error);
+    res.status(500).send({
+      message: "Error al generar la rutina",
+      error: error.message || error,
+    });
+  }
+});
