@@ -55,22 +55,39 @@ const EjercicioPage = () => {
     setIsRunning(false);
   };
 
-  const handleNextSerie = () => {
+  const toggleTerminado = async (idRutina, idEjercicio) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/rutina/${idRutina}/toggleTerminado/${idEjercicio}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error: ", errorData.message);
+        return;
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error("Error al actualizar el estado del ejercicio:", error);
+    }
+  };
+
+  const handleNextSerie = async () => {
     if (seriesCounter < exercise.series) {
       const nextSeries = seriesCounter + 1;
       setSeriesCounter(nextSeries);
       setTimeLeft(exercise.descanso);
       setIsRunning(false);
     } else {
-      fetch(`http://localhost:3001/updateExercise/${exercise.id}`, {
-        method: "PATCH",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Respuesta del servidor:", data);
-          navigate(`/Home?uid=${user._id}`);
-        })
-        .catch((error) => console.error("Error:", error));
+      await toggleTerminado(user._id, exercise._id);
+      navigate(`/Home?uid=${user._id}`);
     }
   };
 

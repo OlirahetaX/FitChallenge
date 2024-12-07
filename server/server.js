@@ -143,7 +143,8 @@ app.post("/addUserData", async (req, res) => {
         mensaje: "El campo 'id' es obligatorio.",
       });
     }
-
+    console.log(req.body.nombre)
+    console.log(req.body.apellido)
     // Intentamos insertar el documento con el id proporcionado
     const documento = {
       _id: req.body.id, // Asigna el id recibido en el body como _id
@@ -243,7 +244,7 @@ app.post("/addExercise", async (req, res) => {
     if (!nombre || !ubicacion || !img || !video || !categoria) {
       return res.status(400).send({
         mensaje:
-          "Todos los campos son obligatorios: nombre, ubicacion, img, categoria y terminado.",
+          "Todos los campos son obligatorios: nombre, ubicacion, img, categoria.",
       });
     }
 
@@ -255,7 +256,6 @@ app.post("/addExercise", async (req, res) => {
       img,
       categoria,
       video,
-      terminado: Boolean(false),
     };
 
     const resultado = await collection.insertOne(ejercicio);
@@ -313,49 +313,6 @@ app.get("/getAllExercises", async (req, res) => {
     });
   }
 });
-
-app.patch("/updateExercise/:id", async (req, res) => {
-  try {
-    const database = client.db("FitChallenge");
-    const collection = database.collection("Ejercicio");
-
-    const { id } = req.params;
-
-    const ejercicio = await collection.findOne({ _id: id });
-
-    if (!ejercicio) {
-      return res.status(404).json({
-        mensaje: "No se encontró el ejercicio con el ID proporcionado.",
-      });
-    }
-
-    const nuevoEstado = !ejercicio.terminado;
-
-    const resultado = await collection.updateOne(
-      { _id: id },
-      { $set: { terminado: nuevoEstado } }
-    );
-
-    if (resultado.modifiedCount === 1) {
-      return res.status(200).json({
-        mensaje: "El estado del ejercicio se actualizó correctamente.",
-        id,
-        terminado: nuevoEstado,
-      });
-    } else {
-      return res.status(500).json({
-        mensaje: "No se pudo actualizar el ejercicio.",
-      });
-    }
-  } catch (error) {
-    console.error("Error al actualizar el ejercicio:", error);
-    res.status(500).send({
-      mensaje: "No se pudo actualizar el ejercicio.",
-      error: error.message || error,
-    });
-  }
-});
-
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI("AIzaSyAIrkKxvTlLwU_XykSMmU5Rdabt7_m1I54");
@@ -429,7 +386,7 @@ app.post("/generateRoutine", async (req, res) => {
             "dia": string,
             "musculos": string,
             "ejercicios": [
-              { "idEjercicio": string, "series": int, "repeticiones": int (debe ser un número o un rango de números), "descanso": int, "descripcion": text (es una descripción de como hacer el ejercicio), "peso": int (es un peso sugerido para el ejercicio)}
+              { "idEjercicio": string, "series": int, "repeticiones": int (debe ser un número o un rango de números), "descanso": int, "descripcion": text (es una descripción de como hacer el ejercicio), "peso": int (es un peso sugerido para el ejercicio), "terminado": false (Este no lo toques siempre sera false)}
             ]
           }
         ]
@@ -496,20 +453,78 @@ app.get("/getRoutine/:id", async (req, res) => {
     const collection = database.collection("Rutina");
 
     const { id } = req.params;
-    const ejercicio = await collection.findOne({ _id: id });
+    const rutina = await collection.findOne({ _id: id });
 
-    if (!ejercicio) {
+    if (!rutina) {
       return res.status(404).json({
-        mensaje: "No se encontró el ejercicio con el ID proporcionado.",
+        mensaje: "No se encontró la rutina con el ID proporcionado.",
       });
     }
 
-    res.status(200).json(ejercicio);
+    res.status(200).json(rutina);
   } catch (error) {
-    console.error("Error al obtener el ejercicio:", error);
+    console.error("Error al obtener la rutina:", error);
     res.status(500).send({
-      mensaje: "No se pudo obtener el ejercicio.",
+      mensaje: "No se pudo obtener la rutina.",
       error: error.message || error,
     });
+  }
+});
+
+app.put("/rutina/:idRutina/toggleTerminado/:idEjercicio", async (req, res) => {
+  const { idRutina, idEjercicio } = req.params;
+
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Rutina");
+
+    const rutina = await collection.findOne({ _id: idRutina });
+
+    if (!rutina) {
+      return res.status(404).json({ message: "Rutina no encontrada." });
+    }
+
+    let ejercicioEncontrado = null;
+
+    for (const sesion of rutina.sesiones) {
+      ejercicioEncontrado = sesion.ejercicios.find(
+        (e) => e.idEjercicio === idEjercicio
+      );
+      if (ejercicioEncontrado) break;
+    }
+
+
+    if (!ejercicioEncontrado) {
+      return res.status(404).json({ message: "Ejercicio no encontrado." });
+    }
+
+    ejercicioEncontrado.terminado = !ejercicioEncontrado.terminado;
+
+    const result = await collection.updateOne(
+      {
+        _id: idRutina, // No es necesario convertir a ObjectId si es un string
+        "sesiones.ejercicios.idEjercicio": idEjercicio,
+      },
+      {
+        $set: {
+          "sesiones.$.ejercicios.$[elem].terminado": ejercicioEncontrado.terminado,
+        },
+      },
+      { arrayFilters: [{ "elem.idEjercicio": idEjercicio }] }
+    );
+
+
+    if (result.modifiedCount === 0) {
+      console.error("No se actualizó el ejercicio.");
+      return res.status(400).json({ message: "No se pudo actualizar el ejercicio." });
+    }
+
+    res.json({
+      message: "Estado del ejercicio actualizado.",
+      ejercicio: ejercicioEncontrado,
+    });
+  } catch (error) {
+    console.error("Error al actualizar el estado del ejercicio: ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
   }
 });

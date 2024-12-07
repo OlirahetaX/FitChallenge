@@ -17,15 +17,16 @@
 .terminado {
   transition: none;
 }
+
 .terminado:hover {
   transform: none;
 }
+
 .terminado img {
   cursor: default;
 }
 
-
-li {
+.item li {
   color: #fff;
   border-radius: 50%;
   transition: background 0.3s;
@@ -37,23 +38,31 @@ li {
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-}
-
-span {
-  margin-top: 10px;
-  color: #333;
   text-align: center;
-  cursor: pointer;
 }
 
-span:hover {
+.item span {
+  display: block;
+  color: #333;
+  font-size: 0.9rem; 
+  margin-top: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 12.5rem; 
+  line-height: 1.2; 
+  word-wrap: break-word;
+}
+
+.item span:hover {
   color: #2630ba;
+  cursor: pointer;
 }
 
 .terminado span {
   cursor: default;
 }
 
-.terminado span:hover{
+.terminado span:hover {
   color: #333;
 }

@@ -139,12 +139,6 @@ const Home = () => {
           alt="Profile Icon"
           onClick={navigateToProfile}
         />
-        <img
-          className="img-profile img-ajustes"
-          src={ajustes}
-          alt="ajustes Icon"
-          onClick={navigateToSettings}
-        />
       </div>
       <Sidebar
         user={user}

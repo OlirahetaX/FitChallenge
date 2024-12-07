@@ -71,7 +71,7 @@ const Sidebar = ({ user, navigateToProfile, navigateToSettings, navigateToHelp }
               alt="User Icon"
               style={{ width: "5rem", height: "5rem", marginRight: "1rem" }}
             />
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center", maxWidth: "10rem" }}>
               <h1 style={{ margin: 0 }}>
                 {user.nombre || "Cargando..."} {user.apellido}
               </h1>
@@ -84,7 +84,6 @@ const Sidebar = ({ user, navigateToProfile, navigateToSettings, navigateToHelp }
             </div>
           </div>
           <SidebarButton title="Perfil" action={navigateToProfile}/>
-          <SidebarButton title="Configuracion" action={navigateToSettings}/>
           <SidebarButton title="Ayuda"action={navigateToHelp}/>
           <SidebarButton title="Cerrar sesion" action={regresar}/>
         </>

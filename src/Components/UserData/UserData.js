@@ -39,7 +39,7 @@ const UserData = () => {
   const [errorpeso, seterrorpeso] = useState(false);
   const [errornombre, seterrornombre] = useState(false);
   const [errorapellido, seterrorapellido] = useState(false);
-  const [rutinaGenerada, setRutinaGenerada] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -126,6 +126,7 @@ const UserData = () => {
     seterrorapellido(!apellidoValido);
 
     if (nombreValido && apellidoValido) {
+      console.log("--------Entro-----------")
       Handleonclick("nombre", nombre);
       reduceCounter();
       Handleonclick("apellido", apellido);
@@ -186,8 +187,8 @@ const UserData = () => {
         ubicacion: formData.ubicacion,
         condicion_fisica: formData.condicion_fisica,
         tiempo_disponible: formData.tiempo_disponible,
-        nombre: formData.nombre,
-        apellido: formData.apellido,
+        nombre: nombre,
+        apellido: apellido,
         altura: formData.altura,
         id: uid,
         email: email,
