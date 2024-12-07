@@ -11,8 +11,8 @@ const ChallengeCarousel = ({ challenges }) => {
         <h2 className="challenge-arrow">→</h2>
       </div>
       <ul>
-        {validChallenges.map((challenge) => (
-          <div key={challenge.id} className="exercise-item">
+        {validChallenges.map((challenge, index) => (
+          <div key={index} className="exercise-item">
             <li>
               <img src={challenge.img} alt={challenge.nombre} />
             </li>

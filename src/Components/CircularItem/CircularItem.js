@@ -13,16 +13,15 @@ const CircularItem = ({ item, onclick }) => {
 
   return (
     <>
-      {item.terminado && (
-        <div key={item.id} className="item terminado">
+      {item.terminado ? (
+        <div className="item terminado">
           <li>
             <img src={ExerciseDone} alt={item.nombre} />
           </li>
           <span>{item.nombre}</span>
         </div>
-      )}
-      {!item.terminado && (
-        <div key={item.id} className="item" onClick={handleClick}>
+      ) : (
+        <div className="item" onClick={handleClick}>
           <li>
             <img src={item.img} alt={item.nombre} />
           </li>

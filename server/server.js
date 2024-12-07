@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 var urlEncodeParser = bodyParser.urlencoded({ extended: true });
+const { ObjectId } = require("mongodb");
 
 const { ServerApiVersion, MongoClient } = require("mongodb");
 const { initializeApp } = require("firebase/app");
@@ -158,7 +159,7 @@ app.post("/addUserData", async (req, res) => {
       nombre: req.body.nombre,
       apellido: req.body.apellido,
       altura: req.body.altura,
-      email: req.body.email
+      email: req.body.email,
     };
 
     const resultado = await collection.insertOne(documento);
@@ -232,6 +233,129 @@ app.get("/checkUser/:uid", async (req, res) => {
   }
 });
 
+app.post("/addExercise", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+
+    const { nombre, ubicacion, img, video, categoria } = req.body;
+
+    if (!nombre || !ubicacion || !img || !video || !categoria) {
+      return res.status(400).send({
+        mensaje:
+          "Todos los campos son obligatorios: nombre, ubicacion, img, categoria y terminado.",
+      });
+    }
+
+    // Crear el ejercicio con un _id como cadena
+    const ejercicio = {
+      _id: new Date().getTime().toString(), // ID único basado en el timestamp
+      nombre,
+      ubicacion,
+      img,
+      categoria,
+      video,
+      terminado: Boolean(false),
+    };
+
+    const resultado = await collection.insertOne(ejercicio);
+
+    res.status(200).send({
+      mensaje: "Ejercicio creado con éxito en MongoDB",
+      id: ejercicio._id,
+    });
+  } catch (error) {
+    console.error("Error al guardar el ejercicio:", error);
+    res.status(500).send({
+      mensaje: "No se pudo guardar el ejercicio en MongoDB",
+      error: error.message || error,
+    });
+  }
+});
+
+app.get("/getExercise/:id", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+
+    const { id } = req.params;
+    const ejercicio = await collection.findOne({ _id: id });
+
+    if (!ejercicio) {
+      return res.status(404).json({
+        mensaje: "No se encontró el ejercicio con el ID proporcionado.",
+      });
+    }
+
+    res.status(200).json(ejercicio);
+  } catch (error) {
+    console.error("Error al obtener el ejercicio:", error);
+    res.status(500).send({
+      mensaje: "No se pudo obtener el ejercicio.",
+      error: error.message || error,
+    });
+  }
+});
+
+app.get("/getAllExercises", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+
+    const ejercicios = await collection.find({}).toArray();
+
+    res.status(200).send(ejercicios);
+  } catch (error) {
+    console.error("Error al obtener todos los ejercicios:", error);
+    res.status(500).send({
+      mensaje: "No se pudieron obtener los ejercicios.",
+      error: error.message || error,
+    });
+  }
+});
+
+app.patch("/updateExercise/:id", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+
+    const { id } = req.params;
+
+    const ejercicio = await collection.findOne({ _id: id });
+
+    if (!ejercicio) {
+      return res.status(404).json({
+        mensaje: "No se encontró el ejercicio con el ID proporcionado.",
+      });
+    }
+
+    const nuevoEstado = !ejercicio.terminado;
+
+    const resultado = await collection.updateOne(
+      { _id: id },
+      { $set: { terminado: nuevoEstado } }
+    );
+
+    if (resultado.modifiedCount === 1) {
+      return res.status(200).json({
+        mensaje: "El estado del ejercicio se actualizó correctamente.",
+        id,
+        terminado: nuevoEstado,
+      });
+    } else {
+      return res.status(500).json({
+        mensaje: "No se pudo actualizar el ejercicio.",
+      });
+    }
+  } catch (error) {
+    console.error("Error al actualizar el ejercicio:", error);
+    res.status(500).send({
+      mensaje: "No se pudo actualizar el ejercicio.",
+      error: error.message || error,
+    });
+  }
+});
+
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI("AIzaSyAIrkKxvTlLwU_XykSMmU5Rdabt7_m1I54");
@@ -240,6 +364,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 app.post("/generateRoutine", async (req, res) => {
   try {
     const {
+      idUsuario,
       nombre,
       apellido,
       objetivo,
@@ -254,33 +379,57 @@ app.post("/generateRoutine", async (req, res) => {
       altura,
     } = req.body;
 
+    // Obtener todos los ejercicios de la base de datos
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+    const ejercicios = await collection.find({}).toArray();
+
+    // Convertir los ejercicios a un formato adecuado para el prompt
+    const ejerciciosList = ejercicios.map((ejercicio) => ({
+      idEjercicio: ejercicio._id,
+      nombre: ejercicio.nombre,
+      categoria: ejercicio.categoria,
+      ubicacion: ejercicio.ubicacion,
+    }));
+
+    // Crear el prompt para la IA con todos los ejercicios disponibles
     const prompt = `
       Genera una rutina personalizada basada en los siguientes datos del usuario:
       - Nombre: ${nombre} ${apellido}
       - Objetivo: ${objetivo}
       - Edad: ${edad}
       - Género: ${genero}
-      - Peso: ${peso} kg
+      - Peso: ${peso} LBS
       - Altura: ${altura} cm
       - Experiencia: ${experiencia}
       - Días disponibles: ${dias_disponibles}
       - Ubicación: ${ubicacion}
-      - Condición física: ${condicion_fisica}
+      - Complicacion fisica: ${condicion_fisica}
       - Tiempo disponible por sesión: ${tiempo_disponible} minutos
 
+      Ejercicios disponibles:
+      ${ejerciciosList
+        .map(
+          (ex) =>
+            `- ${ex.nombre} (ID: ${ex.idEjercicio}, Categoría: ${ex.categoria}, Ubicacion: ${ex.ubicacion})`
+        )
+        .join("\n")}
+      
+      Si la hubicacion del usurio dice casa solo usa ejercicios que esten en casa pero si dice gimnasio puedes usar ejercicios de casa y de gimnasio pero preferiblemente de gimnasio.
+      Tambien procura no poner ejercicios cualquiera sino que tenga sentido la rutina como por ejemplo no vas a poner hacer pecho dos dias seguidos o hacer todos los musculos un solo dia pero todo depende de la cantidad de tiempo y dias disponibles del usuario.
+      Crea los 7 dias de la semana pero solo vas a poner ejercicios en de acuerdo con la cantidad de dias del usuario en los demas dias en el apartado de musculos a trabajar solo ponle Descanso.
       La respuesta debe ser exclusivamente un JSON válido con esta estructura:
       {
-        "rutina_id": int,
         "nombre_rutina": string,
         "descripcion": text,
-        "duracion": int,
         "nivel": string,
         "objetivo": string,
         "sesiones": [
           {
             "dia": string,
+            "musculos": string,
             "ejercicios": [
-              { "nombre": string, "series": int, "repeticiones": int (debe ser un número o un rango de números), "descanso": int }
+              { "idEjercicio": string, "series": int, "repeticiones": int (debe ser un número o un rango de números), "descanso": int, "descripcion": text (es una descripción de como hacer el ejercicio), "peso": int (es un peso sugerido para el ejercicio)}
             ]
           }
         ]
@@ -289,35 +438,43 @@ app.post("/generateRoutine", async (req, res) => {
       No incluyas texto adicional fuera del JSON. Usa únicamente valores numéricos para "repeticiones", como un rango de repeticiones (por ejemplo, "8-12").
     `;
 
+    // Llamar a la IA para generar la rutina
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
 
+    // Extraer el JSON de la respuesta de la IA
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
-      throw new Error(`No se encontró un JSON válido en la respuesta de la IA: ${responseText}`);
+      throw new Error(
+        `No se encontró un JSON válido en la respuesta de la IA: ${responseText}`
+      );
     }
 
-    
     let routineData;
     try {
       routineData = JSON.parse(jsonMatch[0]);
 
-      routineData.sesiones.forEach(session => {
-        session.ejercicios.forEach(exercise => {
-          if (typeof exercise.repeticiones === 'string' && exercise.repeticiones === 'Máximo') {
+      routineData.sesiones.forEach((session) => {
+        session.ejercicios.forEach((exercise) => {
+          if (
+            typeof exercise.repeticiones === "string" &&
+            exercise.repeticiones === "Máximo"
+          ) {
             exercise.repeticiones = 15;
           }
         });
       });
-    } catch (error) {
-      throw new Error(`Error al analizar el JSON extraído: ${jsonMatch[0]}. Error: ${error.message}`);
+    } catch (parseError) {
+      throw new Error(`Error al analizar el JSON: ${parseError.message}`);
     }
+    const database2 = client.db("FitChallenge");
+    const routinesCollection = database2.collection("Rutina");
 
-    const database = client.db("FitChallenge");
-    const routinesCollection = database.collection("Rutinas");
-
-    const response = await routinesCollection.insertOne(routineData);
+    const response = await routinesCollection.insertOne({
+      _id: idUsuario,
+      ...routineData,
+    });
 
     res.status(200).send({
       message: "Rutina generada y almacenada con éxito",
@@ -325,9 +482,33 @@ app.post("/generateRoutine", async (req, res) => {
       id: response.insertedId,
     });
   } catch (error) {
-    console.error("Error generando rutina:", error);
+    console.error("Error al generar la rutina:", error);
     res.status(500).send({
-      message: "Error al generar la rutina",
+      mensaje: "No se pudo generar la rutina.",
+      error: error.message || error,
+    });
+  }
+});
+
+app.get("/getRoutine/:id", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Rutina");
+
+    const { id } = req.params;
+    const ejercicio = await collection.findOne({ _id: id });
+
+    if (!ejercicio) {
+      return res.status(404).json({
+        mensaje: "No se encontró el ejercicio con el ID proporcionado.",
+      });
+    }
+
+    res.status(200).json(ejercicio);
+  } catch (error) {
+    console.error("Error al obtener el ejercicio:", error);
+    res.status(500).send({
+      mensaje: "No se pudo obtener el ejercicio.",
       error: error.message || error,
     });
   }

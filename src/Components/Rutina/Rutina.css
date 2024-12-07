@@ -34,6 +34,16 @@
   list-style: none;
 }
 
+.routine-carousel ul img{
+  width: 10rem;
+  height: 9rem;
+  margin-left: 40rem;
+  transition: transform 0.3s ease;
+}
+.routine-carousel ul img:hover{
+  transform: scale(1.1);
+}
+
 .routine-carousel ul::-webkit-scrollbar {
   height: 7px;
 }
@@ -54,3 +64,4 @@
   align-items: center;
   width: min-content;
 }
+

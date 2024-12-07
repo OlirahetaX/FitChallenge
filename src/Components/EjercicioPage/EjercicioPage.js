@@ -9,11 +9,7 @@ const EjercicioPage = () => {
   const { exercise, user } = location.state || {};
   const navigate = useNavigate();
 
-  const initialSeries = localStorage.getItem("seriesCounter")
-    ? parseInt(localStorage.getItem("seriesCounter"))
-    : 1;
-
-  const [seriesCounter, setSeriesCounter] = useState(initialSeries);
+  const [seriesCounter, setSeriesCounter] = useState(1);
   const [timeLeft, setTimeLeft] = useState(exercise?.descanso || 0);
 
   const [isRunning, setIsRunning] = useState(false);
@@ -63,12 +59,18 @@ const EjercicioPage = () => {
     if (seriesCounter < exercise.series) {
       const nextSeries = seriesCounter + 1;
       setSeriesCounter(nextSeries);
-      localStorage.setItem("seriesCounter", nextSeries); // Guardar el contador de series en localStorage
       setTimeLeft(exercise.descanso);
       setIsRunning(false);
-      window.location.reload(); // Recargar la página
     } else {
-      navigate(`/Home?uid=${user._id}`);
+      fetch(`http://localhost:3001/updateExercise/${exercise.id}`, {
+        method: "PATCH",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Respuesta del servidor:", data);
+          navigate(`/Home?uid=${user._id}`);
+        })
+        .catch((error) => console.error("Error:", error));
     }
   };
 
@@ -107,7 +109,7 @@ const EjercicioPage = () => {
               </div>
               <div className="info-box">
                 <h3>Descanso</h3>
-                <p>{exercise.descanso} segundos</p>
+                <p>{exercise.descanso}s</p>
               </div>
             </div>
 

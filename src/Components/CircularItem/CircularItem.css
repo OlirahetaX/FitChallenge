@@ -1,6 +1,6 @@
 .item {
   transition: transform 0.3s ease;
-  margin-left: 6px;
+  margin-left: 1rem;
 }
 
 .item img {

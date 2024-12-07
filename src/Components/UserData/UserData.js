@@ -23,7 +23,7 @@ const UserData = () => {
     apellido: "",
     altura: "",
     id: uid,
-    email: email 
+    email: email,
   });
   const [edad, setEdad] = useState("");
   const [altura, setaltura] = useState("");
@@ -39,6 +39,7 @@ const UserData = () => {
   const [errorpeso, seterrorpeso] = useState(false);
   const [errornombre, seterrornombre] = useState(false);
   const [errorapellido, seterrorapellido] = useState(false);
+  const [rutinaGenerada, setRutinaGenerada] = useState(false);
 
   const navigate = useNavigate();
 
@@ -128,7 +129,45 @@ const UserData = () => {
       Handleonclick("nombre", nombre);
       reduceCounter();
       Handleonclick("apellido", apellido);
+      handleEnd();
     }
+  };
+
+  const generarRutina = () => {
+    fetch("http://localhost:3001/generateRoutine", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        objetivo: formData.objetivo,
+        edad: formData.edad,
+        genero: formData.genero,
+        peso: formData.peso,
+        experiencia: formData.experiencia,
+        dias_disponibles: formData.dias_disponibles,
+        ubicacion: formData.ubicacion,
+        condicion_fisica: formData.condicion_fisica,
+        tiempo_disponible: formData.tiempo_disponible,
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        altura: formData.altura,
+        idUsuario: uid,
+      }).toString(),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Routine saved:", data);
+        navigate(`/Home?uid=${uid}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleEnd = () => {
@@ -162,7 +201,7 @@ const UserData = () => {
       })
       .then((data) => {
         console.log("Data saved:", data);
-        navigate(`/Home?uid=${uid}`);
+        generarRutina();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -553,12 +592,6 @@ const UserData = () => {
               <span>IA generando rutina...</span>
             </div>
           </div>
-          <button
-            className="mt-10 w-80 bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg button-size"
-            onClick={handleEnd}
-          >
-            Continuar
-          </button>
         </div>
       )}
     </div>

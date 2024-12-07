@@ -52,8 +52,8 @@ const FitnessInfo = () => {
         <h2 className="info-arrow">→</h2>
       </div>
       <ul>
-        {topics.map((topic) => (
-          <CircularItem item={topic} onclick={handleOnClick} />
+        {topics.map((topic, index) => (
+          <CircularItem key={index} item={topic} onclick={handleOnClick} />
         ))}
       </ul>
     </div>
