@@ -191,8 +191,7 @@ app.get("/user/:id", async (req, res) => {
   const userId = req.params.id;
 
   try {
-    // Conectarte a la base de datos y acceder a la colección
-    const database = client.db("FitChallenge"); // Usar la conexión creada con MongoClient
+    const database = client.db("FitChallenge"); 
     const collection = database.collection("Usuario");
 
     // Buscar el usuario por ID
@@ -201,7 +200,7 @@ app.get("/user/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user); // Responder con el usuario encontrado
+    res.status(200).json(user); 
   } catch (err) {
     console.error("Error retrieving user:", err);
     res
@@ -336,12 +335,12 @@ app.post("/generateRoutine", async (req, res) => {
       altura,
     } = req.body;
 
-    // Obtener todos los ejercicios de la base de datos
+    
     const database = client.db("FitChallenge");
     const collection = database.collection("Ejercicio");
     const ejercicios = await collection.find({}).toArray();
 
-    // Convertir los ejercicios a un formato adecuado para el prompt
+    
     const ejerciciosList = ejercicios.map((ejercicio) => ({
       idEjercicio: ejercicio._id,
       nombre: ejercicio.nombre,
@@ -349,7 +348,7 @@ app.post("/generateRoutine", async (req, res) => {
       ubicacion: ejercicio.ubicacion,
     }));
 
-    // Crear el prompt para la IA con todos los ejercicios disponibles
+    
     const prompt = `
       Genera una rutina personalizada basada en los siguientes datos del usuario:
       - Nombre: ${nombre} ${apellido}
@@ -395,11 +394,9 @@ app.post("/generateRoutine", async (req, res) => {
       No incluyas texto adicional fuera del JSON. Usa únicamente valores numéricos para "repeticiones", como un rango de repeticiones (por ejemplo, "8-12").
     `;
 
-    // Llamar a la IA para generar la rutina
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
-
-    // Extraer el JSON de la respuesta de la IA
+ 
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -526,5 +523,127 @@ app.put("/rutina/:idRutina/toggleTerminado/:idEjercicio", async (req, res) => {
   } catch (error) {
     console.error("Error al actualizar el estado del ejercicio: ", error);
     res.status(500).json({ message: "Error interno del servidor." });
+  }
+});
+
+
+app.post("/crearReto", async (req, res) => {
+  try {
+    const {
+      idUsuario,
+      nombre,
+      apellido,
+      objetivo,
+      edad,
+      genero,
+      peso,
+      experiencia,
+      dias_disponibles,
+      ubicacion,
+      condicion_fisica,
+      tiempo_disponible,
+      altura,
+    } = req.body;
+
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Ejercicio");
+    const ejercicios = await collection.find({}).toArray();
+
+    const ejerciciosList = ejercicios.map((ejercicio) => ({
+      idEjercicio: ejercicio._id,
+      nombre: ejercicio.nombre,
+      categoria: ejercicio.categoria,
+      ubicacion: ejercicio.ubicacion,
+    }));
+
+    const prompt = `
+      Genera un reto personalizado basado en los siguientes datos del usuario:
+      - Nombre: ${nombre} ${apellido}
+      - Objetivo: ${objetivo}
+      - Edad: ${edad}
+      - Género: ${genero}
+      - Peso: ${peso} LBS
+      - Altura: ${altura} cm
+      - Experiencia: ${experiencia}
+      - Días disponibles: ${dias_disponibles}
+      - Ubicación: ${ubicacion}
+      - Complicación física: ${condicion_fisica}
+      - Tiempo disponible por sesión: ${tiempo_disponible} minutos
+
+      Ejercicios disponibles:
+      ${ejerciciosList
+        .map(
+          (ex) =>
+            `- ${ex.nombre} (ID: ${ex.idEjercicio}, Categoría: ${ex.categoria}, Ubicación: ${ex.ubicacion})`
+        )
+        .join("\n")}
+      
+      Si la ubicación del usuario dice 'casa', solo usa ejercicios que se puedan hacer en casa. Si dice 'gimnasio', puedes usar ejercicios de casa y de gimnasio, pero preferentemente de gimnasio.
+      Asegúrate de crear un reto adecuado a la cantidad de días y tiempo disponibles del usuario. No pongas ejercicios de forma arbitraria, busca que tengan sentido en la rutina. 
+      La respuesta debe ser exclusivamente un JSON válido con esta estructura:
+      {
+        "nombre_reto": string,
+        "descripcion": text,
+        "nivel": string,
+        "objetivo": string,
+        "sesiones": [
+          {
+            "dia": string,
+            "ejercicios": [
+              { "idEjercicio": string, "series": int, "repeticiones": int (puede ser un rango), "descanso": int, "descripcion": text, "peso": int, "terminado": false }
+            ]
+          }
+        ]
+      }
+
+      No incluyas texto adicional fuera del JSON.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error(
+        `No se encontró un JSON válido en la respuesta de la IA: ${responseText}`
+      );
+    }
+
+    let challengeData;
+    try {
+      challengeData = JSON.parse(jsonMatch[0]);
+
+      challengeData.sesiones.forEach((session) => {
+        session.ejercicios.forEach((exercise) => {
+          if (
+            typeof exercise.repeticiones === "string" &&
+            exercise.repeticiones === "Máximo"
+          ) {
+            exercise.repeticiones = 15;
+          }
+        });
+      });
+    } catch (parseError) {
+      throw new Error(`Error al analizar el JSON: ${parseError.message}`);
+    }
+
+    const routinesCollection = database.collection("Reto");
+    const response = await routinesCollection.insertOne({
+      _id: idUsuario,
+      ...challengeData,
+    });
+
+    res.status(200).send({
+      message: "Reto generado y almacenado con éxito",
+      reto: challengeData,
+      id: response.insertedId,
+    });
+  } catch (error) {
+    console.error("Error al generar el reto:", error);
+    res.status(500).send({
+      mensaje: "No se pudo generar el reto.",
+      error: error.message || error,
+    });
   }
 });
