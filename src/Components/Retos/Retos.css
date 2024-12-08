@@ -15,8 +15,6 @@
 
 .challenge-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .challenge-header h2 {
@@ -24,68 +22,60 @@
   font-weight: bold;
 }
 
-.challenge-arrow {
+.challenge-arrow  {
   font-size: 20px;
   margin-left: 1rem;
 }
 
 .challenge-carousel ul {
   display: flex;
-  gap: 15px; 
+  gap: 10px;
   overflow-x: auto;
   padding: 10px 0;
   margin: 0;
   list-style: none;
 }
 
-.challenge-carousel ul::-webkit-scrollbar {
+.challenge-carousel li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  text-align: center;
+  color: #333;
+  margin-left: 10px;
+}
+
+.challenge-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.challenge-image img:hover {
+  transform: scale(1.05);
+}
+
+.challenge-name {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.challenge-carousel .challenges-list::-webkit-scrollbar {
   height: 7px;
 }
 
-.challenge-carousel ul::-webkit-scrollbar-thumb {
+.challenge-carousel .challenges-list::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.challenge-carousel ul::-webkit-scrollbar-thumb:hover {
+.challenge-carousel .challenges-list::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-.challenge-item {
-  transition: transform 0.3s ease;
-  width: 300px;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: 1rem;
-  overflow: hidden;
-  position: relative;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
-.challenge-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 1rem;
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
-
-.challenge-item:hover {
-  transform: scale(1.05); 
-}
-
-.challenge-carousel span {
-  margin-top: 10px;
-  color: #333;
-  text-align: center;
-  cursor: pointer;
-}
-
-.challenge-item:hover span {
-  color: #2630ba; 
-}

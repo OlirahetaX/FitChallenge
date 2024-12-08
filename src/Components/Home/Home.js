@@ -7,6 +7,7 @@ import Retos from "../Retos/Retos";
 import Info from "../Info/Info";
 import profileIcon from "../../assets/profileIcon.png";
 import ajustes from "../../assets/ajustes.png";
+import ChallengeModal from "../RetosVentana/RetoModal";
 
 const Home = () => {
   const location = useLocation();
@@ -16,6 +17,8 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedChallenge, setSelectedChallenge] = useState(null); 
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -41,6 +44,7 @@ const Home = () => {
   const navigateToProfile = () => {
     navigate("/Profile", { state: { user } });
   };
+
   const navigateToSettings = () => {
     navigate("/Settings", { state: { user } });
   };
@@ -48,33 +52,40 @@ const Home = () => {
   const navigateToHelp = () => {
     navigate(`/Help?uid=${uid}`);
   };
+
+  const openModal = (challenge) => {
+    setSelectedChallenge(challenge); 
+    setIsModalOpen(true); 
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); 
+    setSelectedChallenge(null); 
+  };
+
   if (loading) {
-    return <div className="loader"></div>; // Puedes poner un spinner o cualquier indicativo de carga
+    return <div className="loader"></div>;
   }
 
   const exampleExercises = [
     {
-      //los que tienen // se guarda en la bd y los que no los da la ia
-      id: 1, //
-      nombre: "Press de banca", //
-      ubicacion: "casa", //
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg", //
-      descripcion:
-        "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      id: 1,
+      nombre: "Press de banca",
+      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
       descanso: 10,
-      categoria: "Pecho", //
+      categoria: "Pecho",
       series: 4,
       repeticiones: 12,
       peso: 50,
-      video: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg", //
-      terminado: false, //
+      video: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
+      terminado: false,
     },
     {
       id: 2,
       nombre: "Flexiones",
       img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-      descripcion:
-        "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
       descanso: 10,
       categoria: "Pecho",
       series: 4,
@@ -88,46 +99,7 @@ const Home = () => {
       nombre: "Plancha",
       img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
     },
-    {
-      id: 4,
-      nombre: "Burpees",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 5,
-      nombre: "Zancadas",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 3,
-      nombre: "Plancha",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 4,
-      nombre: "Burpees",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 5,
-      nombre: "Zancadas",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 3,
-      nombre: "Plancha",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 4,
-      nombre: "Burpees",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
-    {
-      id: 5,
-      nombre: "Zancadas",
-      img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-    },
+    // Otros ejercicios...
   ];
 
   return (
@@ -147,8 +119,12 @@ const Home = () => {
         navigateToProfile={navigateToProfile}
       />
       <Rutina user={user} />
-      <Retos challenges={exampleExercises} />
+      <Retos user={user} openModal={openModal} /> {}
       <Info />
+      
+      {isModalOpen && (
+        <ChallengeModal challenge={selectedChallenge} closeModal={closeModal} />
+      )}
     </div>
   );
 };

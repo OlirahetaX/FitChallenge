@@ -374,6 +374,7 @@ app.post("/generateRoutine", async (req, res) => {
       Si la hubicacion del usurio dice casa solo usa ejercicios que esten en casa pero si dice gimnasio puedes usar ejercicios de casa y de gimnasio pero preferiblemente de gimnasio.
       Tambien procura no poner ejercicios cualquiera sino que tenga sentido la rutina como por ejemplo no vas a poner hacer pecho dos dias seguidos o hacer todos los musculos un solo dia pero todo depende de la cantidad de tiempo y dias disponibles del usuario.
       Crea los 7 dias de la semana pero solo vas a poner ejercicios en de acuerdo con la cantidad de dias del usuario en los demas dias en el apartado de musculos a trabajar solo ponle Descanso.
+      El descanso es en segundos
       La respuesta debe ser exclusivamente un JSON válido con esta estructura:
       {
         "nombre_rutina": string,
@@ -527,8 +528,24 @@ app.put("/rutina/:idRutina/toggleTerminado/:idEjercicio", async (req, res) => {
 });
 
 
+app.get("/getChallenges", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Reto");
+    const challenges = await collection.find({}).toArray();
+
+    res.status(200).json(challenges);
+  } catch (error) {
+    console.error("Error al obtener los retos:", error);
+    res.status(500).send({ message: "No se pudieron cargar los retos." });
+  }
+});
+
+const axios = require('axios');
+
 app.post("/crearReto", async (req, res) => {
   try {
+    console.log("Iniciando el proceso de creación de reto...");
     const {
       idUsuario,
       nombre,
@@ -548,6 +565,7 @@ app.post("/crearReto", async (req, res) => {
     const database = client.db("FitChallenge");
     const collection = database.collection("Ejercicio");
     const ejercicios = await collection.find({}).toArray();
+    console.log(`Ejercicios encontrados: ${ejercicios.length}`);
 
     const ejerciciosList = ejercicios.map((ejercicio) => ({
       idEjercicio: ejercicio._id,
@@ -558,7 +576,6 @@ app.post("/crearReto", async (req, res) => {
 
     const prompt = `
       Genera un reto personalizado basado en los siguientes datos del usuario:
-      - Nombre: ${nombre} ${apellido}
       - Objetivo: ${objetivo}
       - Edad: ${edad}
       - Género: ${genero}
@@ -577,9 +594,10 @@ app.post("/crearReto", async (req, res) => {
             `- ${ex.nombre} (ID: ${ex.idEjercicio}, Categoría: ${ex.categoria}, Ubicación: ${ex.ubicacion})`
         )
         .join("\n")}
-      
+
       Si la ubicación del usuario dice 'casa', solo usa ejercicios que se puedan hacer en casa. Si dice 'gimnasio', puedes usar ejercicios de casa y de gimnasio, pero preferentemente de gimnasio.
       Asegúrate de crear un reto adecuado a la cantidad de días y tiempo disponibles del usuario. No pongas ejercicios de forma arbitraria, busca que tengan sentido en la rutina. 
+      No pongas palabras ni rangos en las repeticiones, siempre pone un número, tampoco valores nulos
       La respuesta debe ser exclusivamente un JSON válido con esta estructura:
       {
         "nombre_reto": string,
@@ -590,7 +608,7 @@ app.post("/crearReto", async (req, res) => {
           {
             "dia": string,
             "ejercicios": [
-              { string, "series": int, "repeticiones": int (puede ser un rango), "descanso": int, "descripcion": text, "peso": int, "terminado": false }
+              { "nombre": string, "series": int, "repeticiones": int, "descanso": int, "descripcion": text, "peso": int, "terminado": false }
             ]
           }
         ]
@@ -601,38 +619,73 @@ app.post("/crearReto", async (req, res) => {
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
+    console.log("Respuesta de la IA:", responseText);
 
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    const jsonText = responseText.replace(/"repeticiones":\s*"Máximo"/g, '"repeticiones": 15');  
+
+    const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
-      throw new Error(
-        `No se encontró un JSON válido en la respuesta de la IA: ${responseText}`
-      );
+      throw new Error(`No se encontró un JSON válido en la respuesta de la IA: ${responseText}`);
     }
 
     let challengeData;
     try {
       challengeData = JSON.parse(jsonMatch[0]);
-
-      challengeData.sesiones.forEach((session) => {
-        session.ejercicios.forEach((exercise) => {
-          if (
-            typeof exercise.repeticiones === "string" &&
-            exercise.repeticiones === "Máximo"
-          ) {
-            exercise.repeticiones = 15;
-          }
-        });
-      });
+      console.log("JSON extraído:", challengeData);
     } catch (parseError) {
       throw new Error(`Error al analizar el JSON: ${parseError.message}`);
     }
+
+    challengeData.sesiones.forEach((session) => {
+      session.ejercicios.forEach((exercise) => {
+        if (typeof exercise.repeticiones === "string") {
+          if (exercise.repeticiones === "Máximo") {
+            exercise.repeticiones = 15; 
+          } else if (exercise.repeticiones.includes("-")) {
+            const [min, max] = exercise.repeticiones.split("-").map(num => parseInt(num.trim()));
+            exercise.repeticiones = { min, max };
+          } else {
+            exercise.repeticiones = 10; 
+          }
+        }
+      });
+    });
+
+    const fetchPixabayImage = async (nombreEjercicio) => {
+      try {
+        const query = `${nombreEjercicio} exercise`;  
+        const response = await axios.get(`https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`);
+        
+        const images = response.data.hits; 
+        if (images.length > 0) {
+          const randomIndex = Math.floor(Math.random() * images.length);
+          const imageUrl = images[randomIndex].webformatURL;
+          return imageUrl;
+        } else {
+          return "default-image-url.jpg";  
+        }
+      } catch (error) {
+        console.error("Error al obtener la imagen de Pixabay:", error);
+        return "default-image-url.jpg"; 
+      }
+    };
+    
+
+    for (let session of challengeData.sesiones) {
+      for (let exercise of session.ejercicios) {
+        const imageUrl = await fetchPixabayImage(exercise.nombre);  
+        exercise.img = imageUrl;  
+      }
+    }
+
 
     const routinesCollection = database.collection("Reto");
     const response = await routinesCollection.insertOne({
       _id: idUsuario,
       ...challengeData,
     });
+    console.log("Reto insertado en la base de datos:", response);
 
     res.status(200).send({
       message: "Reto generado y almacenado con éxito",
@@ -640,23 +693,10 @@ app.post("/crearReto", async (req, res) => {
       id: response.insertedId,
     });
   } catch (error) {
-    console.error("Error al generar el reto:", error);
+    console.error("Error al generar el reto:", error); 
     res.status(500).send({
       mensaje: "No se pudo generar el reto.",
       error: error.message || error,
     });
-  }
-});
-
-app.get("/getChallenges", async (req, res) => {
-  try {
-    const database = client.db("FitChallenge");
-    const collection = database.collection("Reto");
-    const challenges = await collection.find({}).toArray();
-
-    res.status(200).json(challenges);
-  } catch (error) {
-    console.error("Error al obtener los retos:", error);
-    res.status(500).send({ message: "No se pudieron cargar los retos." });
   }
 });

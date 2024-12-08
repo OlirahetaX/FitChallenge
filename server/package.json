@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "axios": "^1.7.9",
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "firebase": "^11.0.2",
