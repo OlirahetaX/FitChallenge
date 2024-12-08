@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import CircularItem from "../CircularItem/CircularItem";
 import SleepGif from "../../assets/sleep.gif";
 
-const RoutineCarousel = ({ user }) => {
+const RoutineCarousel = ({ user, dayOfWeek, active }) => {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [musculos, setMusculos] = useState("");
+  const [day, setDay] = useState("");
 
   useEffect(() => {
     const fetchRoutine = async () => {
@@ -19,9 +20,30 @@ const RoutineCarousel = ({ user }) => {
         const routineData = await routineResponse.json();
 
         if (routineData?.sesiones) {
-          const dayOfWeek = new Date().getDay();
-          const convertedDay = dayOfWeek === 0 ? 7 : dayOfWeek;
-          const currentDaySession = routineData.sesiones[convertedDay - 3];
+          const currentDaySession = routineData.sesiones[dayOfWeek];
+          switch (dayOfWeek) {
+            case 0:
+              setDay("Lunes");
+              break;
+            case 1:
+              setDay("Martes");
+              break;
+            case 2:
+              setDay("Miércoles");
+              break;
+            case 3:
+              setDay("Jueves");
+              break;
+            case 4:
+              setDay("Viernes");
+              break;
+            case 5:
+              setDay("Sábado");
+              break;
+            case 6:
+              setDay("Domingo");
+              break;
+          }
 
           if (currentDaySession?.ejercicios) {
             const exercisesDetails = await Promise.all(
@@ -41,14 +63,14 @@ const RoutineCarousel = ({ user }) => {
                     descanso: ejercicio.descanso,
                     descripcion: ejercicio.descripcion,
                     terminado: ejercicio.terminado,
-                    img: imageUrl || "default-image-url.jpg", 
+                    img: imageUrl || "default-image-url.jpg",
                   };
                 } catch (err) {
                   console.error(
                     `Error fetching exercise ${ejercicio.idEjercicio}:`,
                     err
                   );
-                  return null; 
+                  return null;
                 }
               })
             );
@@ -69,30 +91,32 @@ const RoutineCarousel = ({ user }) => {
 
   const fetchPixabayImage = async (exerciseName) => {
     try {
-      const query = `${exerciseName} exercise workout fitness`;  
-      const response = await fetch(`https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`);
+      const query = `${exerciseName} exercise workout fitness`;
+      const response = await fetch(
+        `https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`
+      );
       const data = await response.json();
 
       if (data.hits.length > 0) {
         const randomIndex = Math.floor(Math.random() * data.hits.length);
         return data.hits[randomIndex].webformatURL;
       } else {
-        return "default-image-url.jpg";  
+        return "default-image-url.jpg";
       }
     } catch (error) {
       console.error("Error fetching image from Pixabay:", error);
-      return "default-image-url.jpg";  
+      return "default-image-url.jpg";
     }
   };
 
   const handleOnClick = (exercise) => {
-    navigate("/Ejercicio", { state: { user, exercise } });
+    if (active) navigate("/Ejercicio", { state: { user, exercise } });
   };
 
   return (
     <div className="routine-carousel">
       <div className="routine-header">
-        <h2>Rutina de hoy</h2>
+        <h2>Rutina del {day}</h2>
         <h2 className="info-arrow">→</h2>
         <h2 style={{ marginLeft: "3rem", fontWeight: "normal" }}>{musculos}</h2>
       </div>

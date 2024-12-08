@@ -3,6 +3,7 @@ import "./EjercicioPage.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import YouTubeEmbed from "./YoutubeEmbed/YouTubeEmbed";
 
 const EjercicioPage = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const EjercicioPage = () => {
   const navigate = useNavigate();
 
   const [seriesCounter, setSeriesCounter] = useState(1);
+  const [videoKey, setVideoKey] = useState(0);
   const [timeLeft, setTimeLeft] = useState(exercise?.descanso || 0);
 
   const [isRunning, setIsRunning] = useState(false);
@@ -84,6 +86,7 @@ const EjercicioPage = () => {
       const nextSeries = seriesCounter + 1;
       setSeriesCounter(nextSeries);
       setTimeLeft(exercise.descanso);
+      setVideoKey((prevKey) => prevKey + 1);
       setIsRunning(false);
     } else {
       await toggleTerminado(user._id, exercise._id);
@@ -130,7 +133,8 @@ const EjercicioPage = () => {
               </div>
             </div>
 
-            <img src={exercise.video} alt="Video del ejercicio" />
+            <YouTubeEmbed key={videoKey} videoId={exercise.video} />
+
             <div className="timer-box">
               <h2>Tiempo de Descanso</h2>
               <h1>{formatTime(timeLeft)}</h1>

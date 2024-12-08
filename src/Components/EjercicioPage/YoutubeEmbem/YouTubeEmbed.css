@@ -1,0 +1,11 @@
+.videoEmbed-div {
+    position: relative;
+    padding-top: 60%;
+    margin-top: 1rem;
+}
+
+.videoEmbed-div iframe {
+    border-radius: 15px; 
+    overflow: hidden; 
+    
+}

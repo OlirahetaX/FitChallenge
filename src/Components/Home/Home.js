@@ -17,8 +17,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [selectedChallenge, setSelectedChallenge] = useState(null); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedChallenge, setSelectedChallenge] = useState(null);
+  const [Home, setHome] = useState(true);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -54,25 +55,36 @@ const Home = () => {
   };
 
   const openModal = (challenge) => {
-    setSelectedChallenge(challenge); 
-    setIsModalOpen(true); 
+    setSelectedChallenge(challenge);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); 
-    setSelectedChallenge(null); 
+    setIsModalOpen(false);
+    setSelectedChallenge(null);
   };
 
   if (loading) {
     return <div className="loader"></div>;
   }
 
+  const handleChagePage = (page) => {
+    if (page) setHome(true);
+    else setHome(false);
+  };
+
+  const getDayForRutina = () => {
+    const today = new Date().getDay(); // 0 para domingo, 1 para lunes, etc.
+    return today === 0 ? 6 : today; // Si es domingo (0), devolver 7
+  };
+
   const exampleExercises = [
     {
       id: 1,
       nombre: "Press de banca",
       img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      descripcion:
+        "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
       descanso: 10,
       categoria: "Pecho",
       series: 4,
@@ -85,7 +97,8 @@ const Home = () => {
       id: 2,
       nombre: "Flexiones",
       img: "https://pet-fitness.cl/wp-content/uploads/2020/11/fitness.jpg",
-      descripcion: "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
+      descripcion:
+        "Este es un muy buen ejercicio elav la aiovunaob VPNOi n OIUoundasod sadv aoibv SIUDNVIO divbaoi",
       descanso: 10,
       categoria: "Pecho",
       series: 4,
@@ -115,13 +128,27 @@ const Home = () => {
       <Sidebar
         user={user}
         navigateToHelp={navigateToHelp}
-        navigateToSettings={navigateToSettings}
+        handleChagePage={handleChagePage}
         navigateToProfile={navigateToProfile}
       />
-      <Rutina user={user} />
-      <Retos user={user} openModal={openModal} /> {}
-      <Info />
-      
+      {Home && (
+        <div>
+          <Rutina user={user} dayOfWeek={getDayForRutina()} active={true} />
+          <Retos user={user} openModal={openModal} />
+          <Info />
+        </div>
+      )}
+      {Home == false && (
+        <div>
+          <Rutina user={user} dayOfWeek={0} active={false} />
+          <Rutina user={user} dayOfWeek={1} active={false} />
+          <Rutina user={user} dayOfWeek={2} active={false} />
+          <Rutina user={user} dayOfWeek={3} active={false} />
+          <Rutina user={user} dayOfWeek={4} active={false} />
+          <Rutina user={user} dayOfWeek={5} active={false} />
+          <Rutina user={user} dayOfWeek={6} active={false} />
+        </div>
+      )}
       {isModalOpen && (
         <ChallengeModal challenge={selectedChallenge} closeModal={closeModal} />
       )}

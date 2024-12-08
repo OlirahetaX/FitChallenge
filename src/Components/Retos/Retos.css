@@ -10,7 +10,7 @@
   background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   font-weight: bold;
-  overflow-x: hidden;
+  overflow-x: hidden;  /* Evitar el desbordamiento horizontal */
 }
 
 .challenge-header {
@@ -22,18 +22,25 @@
   font-weight: bold;
 }
 
-.challenge-arrow  {
+.challenge-arrow {
   font-size: 20px;
   margin-left: 1rem;
+}
+
+.challenge-carousel .challenges-list-wrapper {
+  overflow-x: auto;  /* Habilitar el scroll horizontal */
+  display: flex;
+  justify-content: flex-start;  /* Alinear los elementos a la izquierda */
+  width: 100%;  /* Asegúrate de que el contenedor ocupe todo el ancho */
 }
 
 .challenge-carousel ul {
   display: flex;
   gap: 10px;
-  overflow-x: auto;
   padding: 10px 0;
   margin: 0;
   list-style: none;
+  flex-wrap: nowrap;  /* No permitir que los elementos se envuelvan */
 }
 
 .challenge-carousel li {
@@ -65,17 +72,88 @@
   font-weight: bold;
 }
 
-.challenge-carousel .challenges-list::-webkit-scrollbar {
+/* Estilo del scrollbar */
+.challenge-carousel .challenges-list-wrapper::-webkit-scrollbar {
   height: 7px;
 }
 
-.challenge-carousel .challenges-list::-webkit-scrollbar-thumb {
+.challenge-carousel .challenges-list-wrapper::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.challenge-carousel .challenges-list::-webkit-scrollbar-thumb:hover {
+.challenge-carousel .challenges-list-wrapper::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
+/* Estilo para el botón */
+.Reto-button {
+  padding-inline: 1.5rem;
+  margin-left: 4rem;
+  background: rgb(106, 82, 242);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.Reto-button:hover {
+  background: rgb(63, 43, 177);
+  transform: scale(1.03);
+}
+
+/* Animación de carga */
+.dots-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+  border-radius: 10px;
+  background-color: #b3d4fc;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dot:last-child {
+  margin-right: 0;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.3s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.1s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: #6793fb;
+    box-shadow: 0 0 0 10px rgba(178, 212, 252, 0);
+  }
+
+  100% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+}
