@@ -590,7 +590,7 @@ app.post("/crearReto", async (req, res) => {
           {
             "dia": string,
             "ejercicios": [
-              { "idEjercicio": string, "series": int, "repeticiones": int (puede ser un rango), "descanso": int, "descripcion": text, "peso": int, "terminado": false }
+              { string, "series": int, "repeticiones": int (puede ser un rango), "descanso": int, "descripcion": text, "peso": int, "terminado": false }
             ]
           }
         ]
@@ -645,5 +645,18 @@ app.post("/crearReto", async (req, res) => {
       mensaje: "No se pudo generar el reto.",
       error: error.message || error,
     });
+  }
+});
+
+app.get("/getChallenges", async (req, res) => {
+  try {
+    const database = client.db("FitChallenge");
+    const collection = database.collection("Reto");
+    const challenges = await collection.find({}).toArray();
+
+    res.status(200).json(challenges);
+  } catch (error) {
+    console.error("Error al obtener los retos:", error);
+    res.status(500).send({ message: "No se pudieron cargar los retos." });
   }
 });

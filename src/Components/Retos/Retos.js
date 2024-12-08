@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Retos.css";  
 
-const ChallengeCarousel = ({ challenges }) => {
-  const validChallenges = Array.isArray(challenges) ? challenges : [];
+const ChallengeCarousel = () => {
+  const [challenges, setChallenges] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChallenges = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/getChallenges"); 
+        const data = await response.json();
+        setChallenges(data);  
+      } catch (error) {
+        console.error("Error fetching challenges:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChallenges();
+  }, []);
 
   return (
     <div className="challenge-carousel">
@@ -10,16 +27,20 @@ const ChallengeCarousel = ({ challenges }) => {
         <h2>Retos de la Comunidad</h2>
         <h2 className="challenge-arrow">→</h2>
       </div>
-      <ul>
-        {validChallenges.map((challenge, index) => (
-          <div key={index} className="exercise-item">
-            <li>
-              <img src={challenge.img} alt={challenge.nombre} />
+      {loading ? (
+        <div>Cargando...</div>
+      ) : (
+        <ul className="challenges-list">
+          {challenges.map((challenge, index) => (
+            <li key={index} className="challenge-item">
+              <div className="challenge-image">
+                <img src={challenge.img} alt={challenge.nombre} />
+              </div>
+              <span>{challenge.nombre}</span>
             </li>
-            <span>{challenge.nombre}</span>
-          </div>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

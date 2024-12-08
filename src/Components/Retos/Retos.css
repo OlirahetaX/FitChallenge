@@ -15,20 +15,23 @@
 
 .challenge-header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .challenge-header h2 {
   font-size: 24px;
   font-weight: bold;
 }
-.challenge-arrow  {
+
+.challenge-arrow {
   font-size: 20px;
   margin-left: 1rem;
 }
 
 .challenge-carousel ul {
   display: flex;
-  gap: 5px;
+  gap: 15px; 
   overflow-x: auto;
   padding: 10px 0;
   margin: 0;
@@ -48,43 +51,32 @@
   background: #555;
 }
 
-.challenge-carousel ul div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: min-content;
-}
-
-.challenge-carousel li {
-  color: #fff;
-  margin-left: 8px;
-  border-radius: 1rem;
-  transition: background 0.3s;
+.challenge-item {
+  transition: transform 0.3s ease;
   width: 300px;
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  border-radius: 1rem;
   overflow: hidden;
   position: relative;
-  flex-shrink: 0;
-}
-
-.challenge-item {
-  transition: transform 0.3s ease;
-  margin-left: 6px;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .challenge-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 1rem;
+  transition: transform 0.3s ease;
   cursor: pointer;
 }
 
 .challenge-item:hover {
-  transform: scale(1.1);
+  transform: scale(1.05); 
 }
 
 .challenge-carousel span {
@@ -94,6 +86,6 @@
   cursor: pointer;
 }
 
-.challenge-carousel .exercise-item :hover {
-  color: #2630ba;
+.challenge-item:hover span {
+  color: #2630ba; 
 }
