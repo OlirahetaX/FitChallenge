@@ -57,16 +57,16 @@
 
 .routine-carousel-centered {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  height: 100%; /* Ocupa el espacio completo */
+  justify-content: center; 
+  align-items: center; 
+  height: 100%; 
 }
 
 #SleepingImg {
   width: 10rem;
   height: 9rem;
   transition: transform 0.3s ease;
-  object-fit: contain; /* Escala la imagen sin distorsionarla */
+  object-fit: contain; 
 }
 
 #SleepingImg:hover {
