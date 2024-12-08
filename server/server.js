@@ -541,7 +541,7 @@ app.get("/getChallenges", async (req, res) => {
   }
 });
 
-const axios = require('axios');  // Asegúrate de tener axios importado
+const axios = require('axios'); 
 
 app.post("/crearReto", async (req, res) => {
   try {
@@ -562,7 +562,6 @@ app.post("/crearReto", async (req, res) => {
       altura,
     } = req.body;
 
-    // Función para obtener una imagen aleatoria de Pixabay usando el nombre del ejercicio
     const fetchPixabayImage = async (nombreEjercicio) => {
       try {
         const query = `${nombreEjercicio} exercise`;  
@@ -639,7 +638,6 @@ app.post("/crearReto", async (req, res) => {
       No incluyas texto adicional fuera del JSON.
     `;
 
-    // Generación de contenido con IA
     const result = await model.generateContent(prompt);
     const responseText = await result.response.text();
     console.log("Respuesta de la IA:", responseText);
@@ -659,11 +657,9 @@ app.post("/crearReto", async (req, res) => {
       throw new Error(`Error al analizar el JSON: ${parseError.message}`);
     }
 
-    // Obtener imagen de Pixabay usando el nombre del reto
     const imageUrl = await fetchPixabayImage(challengeData.nombre_reto);
     challengeData.img = imageUrl;
 
-    // Asignar imágenes a los ejercicios dentro de las sesiones
     challengeData.sesiones.forEach((session) => {
       session.ejercicios.forEach((exercise) => {
         const ejercicioBD = ejerciciosList.find(
@@ -678,7 +674,6 @@ app.post("/crearReto", async (req, res) => {
       });
     });
 
-    // Insertar el reto en la base de datos
     const routinesCollection = database.collection("Reto");
     const response = await routinesCollection.insertOne({
       _id: idUsuario,
