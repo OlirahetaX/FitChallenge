@@ -31,6 +31,8 @@ const RoutineCarousel = ({ user }) => {
                     `http://localhost:3001/getExercise/${ejercicio.idEjercicio}`
                   );
                   const exerciseData = await exerciseResponse.json();
+                  // Añadir la imagen del ejercicio desde Pixabay
+                  const imageUrl = await fetchPixabayImage(exerciseData.nombre);
                   return {
                     ...exerciseData,
                     peso: ejercicio.peso,
@@ -39,13 +41,14 @@ const RoutineCarousel = ({ user }) => {
                     descanso: ejercicio.descanso,
                     descripcion: ejercicio.descripcion,
                     terminado: ejercicio.terminado,
+                    img: imageUrl || "default-image-url.jpg", 
                   };
                 } catch (err) {
                   console.error(
                     `Error fetching exercise ${ejercicio.idEjercicio}:`,
                     err
                   );
-                  return null; // Retorna null si un ejercicio falla
+                  return null; 
                 }
               })
             );
@@ -63,6 +66,24 @@ const RoutineCarousel = ({ user }) => {
 
     fetchRoutine();
   }, [user._id]);
+
+  const fetchPixabayImage = async (exerciseName) => {
+    try {
+      const query = `${exerciseName} exercise workout fitness`;  
+      const response = await fetch(`https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`);
+      const data = await response.json();
+
+      if (data.hits.length > 0) {
+        const randomIndex = Math.floor(Math.random() * data.hits.length);
+        return data.hits[randomIndex].webformatURL;
+      } else {
+        return "default-image-url.jpg";  
+      }
+    } catch (error) {
+      console.error("Error fetching image from Pixabay:", error);
+      return "default-image-url.jpg";  
+    }
+  };
 
   const handleOnClick = (exercise) => {
     navigate("/Ejercicio", { state: { user, exercise } });
@@ -90,5 +111,3 @@ const RoutineCarousel = ({ user }) => {
 };
 
 export default RoutineCarousel;
-
-//cambiar en la base de datos que el atributo terminado este en lo que devuelve la ia y no en el otro
