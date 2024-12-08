@@ -541,7 +541,7 @@ app.get("/getChallenges", async (req, res) => {
   }
 });
 
-const axios = require('axios');
+const axios = require('axios');  // Asegúrate de tener axios importado
 
 app.post("/crearReto", async (req, res) => {
   try {
@@ -562,6 +562,26 @@ app.post("/crearReto", async (req, res) => {
       altura,
     } = req.body;
 
+    // Función para obtener una imagen aleatoria de Pixabay usando el nombre del ejercicio
+    const fetchPixabayImage = async (nombreEjercicio) => {
+      try {
+        const query = `${nombreEjercicio} exercise`;  
+        const response = await axios.get(`https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${encodeURIComponent(query)}&image_type=photo`);
+        
+        const images = response.data.hits; 
+        if (images.length > 0) {
+          const randomIndex = Math.floor(Math.random() * images.length);
+          const imageUrl = images[randomIndex].webformatURL;
+          return imageUrl;
+        } else {
+          return "default-image-url.jpg";  
+        }
+      } catch (error) {
+        console.error("Error al obtener la imagen de Pixabay:", error);
+        return "default-image-url.jpg"; 
+      }
+    };
+
     const database = client.db("FitChallenge");
     const collection = database.collection("Ejercicio");
     const ejercicios = await collection.find({}).toArray();
@@ -572,6 +592,7 @@ app.post("/crearReto", async (req, res) => {
       nombre: ejercicio.nombre,
       categoria: ejercicio.categoria,
       ubicacion: ejercicio.ubicacion,
+      img: ejercicio.img,
     }));
 
     const prompt = `
@@ -604,6 +625,7 @@ app.post("/crearReto", async (req, res) => {
         "descripcion": text,
         "nivel": string,
         "objetivo": string,
+        "img": string,
         "sesiones": [
           {
             "dia": string,
@@ -617,12 +639,12 @@ app.post("/crearReto", async (req, res) => {
       No incluyas texto adicional fuera del JSON.
     `;
 
+    // Generación de contenido con IA
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const responseText = await result.response.text();
     console.log("Respuesta de la IA:", responseText);
 
-    const jsonText = responseText.replace(/"repeticiones":\s*"Máximo"/g, '"repeticiones": 15');  
-
+    const jsonText = responseText.replace(/"repeticiones":\s*"Máximo"/g, '"repeticiones": 15');
     const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -637,49 +659,26 @@ app.post("/crearReto", async (req, res) => {
       throw new Error(`Error al analizar el JSON: ${parseError.message}`);
     }
 
+    // Obtener imagen de Pixabay usando el nombre del reto
+    const imageUrl = await fetchPixabayImage(challengeData.nombre_reto);
+    challengeData.img = imageUrl;
+
+    // Asignar imágenes a los ejercicios dentro de las sesiones
     challengeData.sesiones.forEach((session) => {
       session.ejercicios.forEach((exercise) => {
-        if (typeof exercise.repeticiones === "string") {
-          if (exercise.repeticiones === "Máximo") {
-            exercise.repeticiones = 15; 
-          } else if (exercise.repeticiones.includes("-")) {
-            const [min, max] = exercise.repeticiones.split("-").map(num => parseInt(num.trim()));
-            exercise.repeticiones = { min, max };
-          } else {
-            exercise.repeticiones = 10; 
-          }
+        const ejercicioBD = ejerciciosList.find(
+          (e) => e.nombre.toLowerCase() === exercise.nombre.toLowerCase()
+        );
+
+        if (ejercicioBD) {
+          exercise.img = ejercicioBD.img || "default-image-url.jpg";  
+        } else {
+          exercise.img = "default-image-url.jpg";  
         }
       });
     });
 
-    const fetchPixabayImage = async (nombreEjercicio) => {
-      try {
-        const query = `${nombreEjercicio} exercise`;  
-        const response = await axios.get(`https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`);
-        
-        const images = response.data.hits; 
-        if (images.length > 0) {
-          const randomIndex = Math.floor(Math.random() * images.length);
-          const imageUrl = images[randomIndex].webformatURL;
-          return imageUrl;
-        } else {
-          return "default-image-url.jpg";  
-        }
-      } catch (error) {
-        console.error("Error al obtener la imagen de Pixabay:", error);
-        return "default-image-url.jpg"; 
-      }
-    };
-    
-
-    for (let session of challengeData.sesiones) {
-      for (let exercise of session.ejercicios) {
-        const imageUrl = await fetchPixabayImage(exercise.nombre);  
-        exercise.img = imageUrl;  
-      }
-    }
-
-
+    // Insertar el reto en la base de datos
     const routinesCollection = database.collection("Reto");
     const response = await routinesCollection.insertOne({
       _id: idUsuario,
@@ -693,7 +692,7 @@ app.post("/crearReto", async (req, res) => {
       id: response.insertedId,
     });
   } catch (error) {
-    console.error("Error al generar el reto:", error); 
+    console.error("Error al generar el reto:", error);
     res.status(500).send({
       mensaje: "No se pudo generar el reto.",
       error: error.message || error,

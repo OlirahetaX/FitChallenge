@@ -21,29 +21,18 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
 
         if (routineData?.sesiones) {
           const currentDaySession = routineData.sesiones[dayOfWeek];
-          switch (dayOfWeek) {
-            case 0:
-              setDay("Lunes");
-              break;
-            case 1:
-              setDay("Martes");
-              break;
-            case 2:
-              setDay("Miércoles");
-              break;
-            case 3:
-              setDay("Jueves");
-              break;
-            case 4:
-              setDay("Viernes");
-              break;
-            case 5:
-              setDay("Sábado");
-              break;
-            case 6:
-              setDay("Domingo");
-              break;
-          }
+
+          
+          const daysOfWeek = [
+            "Lunes",
+            "Martes",
+            "Miércoles",
+            "Jueves",
+            "Viernes",
+            "Sábado",
+            "Domingo",
+          ];
+          setDay(daysOfWeek[dayOfWeek]);
 
           if (currentDaySession?.ejercicios) {
             const exercisesDetails = await Promise.all(
@@ -53,8 +42,7 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
                     `http://localhost:3001/getExercise/${ejercicio.idEjercicio}`
                   );
                   const exerciseData = await exerciseResponse.json();
-                  // Añadir la imagen del ejercicio desde Pixabay
-                  const imageUrl = await fetchPixabayImage(exerciseData.nombre);
+
                   return {
                     ...exerciseData,
                     peso: ejercicio.peso,
@@ -63,7 +51,7 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
                     descanso: ejercicio.descanso,
                     descripcion: ejercicio.descripcion,
                     terminado: ejercicio.terminado,
-                    img: imageUrl || "default-image-url.jpg",
+                    img: exerciseData.img || "default-image-url.jpg",
                   };
                 } catch (err) {
                   console.error(
@@ -75,7 +63,7 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
               })
             );
 
-            setExercises(exercisesDetails.filter(Boolean)); // Filtra los nulos
+            setExercises(exercisesDetails.filter(Boolean));
             setMusculos(currentDaySession.musculos);
           }
         }
@@ -87,27 +75,7 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
     };
 
     fetchRoutine();
-  }, [user._id]);
-
-  const fetchPixabayImage = async (exerciseName) => {
-    try {
-      const query = `${exerciseName} exercise workout fitness`;
-      const response = await fetch(
-        `https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`
-      );
-      const data = await response.json();
-
-      if (data.hits.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.hits.length);
-        return data.hits[randomIndex].webformatURL;
-      } else {
-        return "default-image-url.jpg";
-      }
-    } catch (error) {
-      console.error("Error fetching image from Pixabay:", error);
-      return "default-image-url.jpg";
-    }
-  };
+  }, [user._id, dayOfWeek]);
 
   const handleOnClick = (exercise) => {
     if (active) navigate("/Ejercicio", { state: { user, exercise } });

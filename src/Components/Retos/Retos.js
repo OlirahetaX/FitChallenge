@@ -11,17 +11,9 @@ const ChallengeCarousel = ({ user }) => {
 
   const fetchChallenges = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/getChallenges`);
+      const response = await fetch("http://localhost:3001/getChallenges");
       const data = await response.json();
-
-      const updatedChallenges = await Promise.all(
-        data.map(async (challenge) => {
-          const imageUrl = await fetchPixabayImage(challenge);
-          return { ...challenge, img: imageUrl || "default-image-url.jpg" };
-        })
-      );
-
-      setChallenges(updatedChallenges);
+      setChallenges(data); // Carga desde la base de datos
     } catch (error) {
       console.error("Error fetching challenges:", error);
     } finally {
@@ -35,39 +27,10 @@ const ChallengeCarousel = ({ user }) => {
     }
   }, [user._id]);
 
-  const fetchPixabayImage = async (reto) => {
-    try {
-      const query = `${reto.nombre_reto} exercise workout fitness`;
-      const response = await fetch(
-        `https://pixabay.com/api/?key=47517999-cd0e11c0cb362a0f64b6b9296&q=${query}&image_type=photo`
-      );
-      const data = await response.json();
-
-      if (data.hits.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.hits.length);
-        return data.hits[randomIndex].webformatURL;
-      } else {
-        return "default-image-url.jpg";
-      }
-    } catch (error) {
-      console.error("Error fetching image from Pixabay:", error);
-      return "default-image-url.jpg";
-    }
-  };
-
-  const handleChallengeClick = (challenge) => {
-    setSelectedChallenge(challenge);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedChallenge(null);
-  };
-
   const createReto = async () => {
     setCreating(true);
-    setChallenges([]); // Elimina los retos antes de mostrar la animación
+    setChallenges([]);
+
     const retoData = {
       idUsuario: user._id,
       nombre: user.nombre,
@@ -88,7 +51,7 @@ const ChallengeCarousel = ({ user }) => {
       const response = await fetch("http://localhost:3001/crearReto", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(retoData),
       });
@@ -104,8 +67,19 @@ const ChallengeCarousel = ({ user }) => {
       console.error("Error al enviar la solicitud:", error);
       alert("Error al crear el reto.");
     }
+
     fetchChallenges();
-    setCreating(false); // Vuelve a permitir la creación de retos
+    setCreating(false); 
+  };
+
+  const handleChallengeClick = (challenge) => {
+    setSelectedChallenge(challenge);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedChallenge(null);
   };
 
   return (

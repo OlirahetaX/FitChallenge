@@ -3,7 +3,7 @@ import "./EjercicioPage.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import YouTubeEmbed from "./YoutubeEmbed/YouTubeEmbed";
+import YouTubeEmbed from "./YoutubeEmbem/YouTubeEmbed";
 
 const EjercicioPage = () => {
   const location = useLocation();
