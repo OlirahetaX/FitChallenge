@@ -20,7 +20,7 @@ const RoutineCarousel = ({ user, dayOfWeek, active }) => {
         const routineData = await routineResponse.json();
 
         if (routineData?.sesiones) {
-          const currentDaySession = routineData.sesiones[dayOfWeek];
+          const currentDaySession = routineData.sesiones[dayOfWeek-1];
 
           
           const daysOfWeek = [
