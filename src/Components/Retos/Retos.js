@@ -51,9 +51,23 @@ const ChallengeCarousel = ({ user }) => {
       const response = await fetch("http://localhost:3001/crearReto", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(retoData),
+        body: new URLSearchParams({
+          idUsuario: user._id,
+          nombre: user.nombre,
+          apellido: user.apellido,
+          objetivo: user.objetivo,
+          edad: user.edad,
+          genero: user.genero,
+          peso: user.peso,
+          experiencia: user.experiencia,
+          dias_disponibles: user.dias_disponibles,
+          ubicacion: user.ubicacion,
+          condicion_fisica: user.condicion_fisica,
+          tiempo_disponible: user.tiempo_disponible,
+          altura: user.altura,
+        }).toString(),
       });
 
       const data = await response.json();
@@ -69,7 +83,7 @@ const ChallengeCarousel = ({ user }) => {
     }
 
     fetchChallenges();
-    setCreating(false); 
+    setCreating(false);
   };
 
   const handleChallengeClick = (challenge) => {

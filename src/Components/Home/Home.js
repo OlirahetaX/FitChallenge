@@ -75,7 +75,7 @@ const Home = () => {
 
   const getDayForRutina = () => {
     const today = new Date().getDay(); // 0 para domingo, 1 para lunes, etc.
-    return today === 0 ? 6 : today; // Si es domingo (0), devolver 7
+    return today === 0 ? 6 : today - 1; // Si es domingo (0), devolver 7
   };
 
 
