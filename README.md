@@ -24,7 +24,7 @@ node server.js
 
 npm start
 
-#PROGRAMA DESPLEGADO
+# PROGRAMA DESPLEGADO
 https://fitchallenge.netlify.app
 
 Este `README.md` cubre todo el flujo de trabajo de instalación y ejecución del proyecto tanto para el frontend en React como para el servidor en Node.js.
